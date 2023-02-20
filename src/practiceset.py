@@ -1,7 +1,7 @@
 from __future__ import print_function
 import datetime
 import os.path
-
+import json
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -9,14 +9,18 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 
-SCOPES = 'https://www.googleapis.com/auth/calendar' 
+SCOPES = 'https://www.googleapis.com/auth/calendar'
 
 def test():
     createEvents()
     
 
 
-
+"""
+Reads MockData.csv file
+Reads file line by line -> creates events using data and add them to calendar
+Validates credientials to write/read form AP
+"""
 def createEvents():
       
     creds = None
@@ -38,20 +42,20 @@ def createEvents():
 
     service = build('calendar', 'v3', credentials=creds)
     calendar = createCalendar(service)
-    print(calendar['id'])
+    
 
     file = open("/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/MockData.csv","r")
     num = 0 #number of events being uploaded
     file.readline()
-    #for line in file:
-     #   if(num == 30): #max number of events
-      #      break
-       # eventname, start_date, end_date = line.split(',')
-        #EVENT = formatEvent(eventname, start_date, end_date, service, calendar['id'])
-        #EVENT = service.events().insert(calendarId=calendar['id'], body=EVENT).execute()
-        #print('Event created: %s' % (EVENT.get('htmlLink')))
-    file.close();
-    formatEvent2(service,calendar['id'])
+    for line in file: 
+        num += num  #BUG: Does not stop at num = 30
+        if(num > 30): #max number of events
+            break
+        eventname, start_date, end_date, test = line.split(',')
+        EVENT = formatEvent(eventname, start_date, end_date)
+        EVENT = service.events().insert(calendarId=calendar['id'], body=EVENT).execute()
+        print('Event created: %s' % (EVENT.get('htmlLink')))
+    file.close()
     getEvents(service,calendar['id'])
 
 
@@ -59,24 +63,21 @@ def createEvents():
 """
 Sets the meta data to a JSON payload 
 Returns the payload to be used
-Some metadata is automatically set, parameter values used from file data 
+Some metadata is automatically set for testing, parameter values used from file data 
 """
-def formatEvent(name, start_date, end_date, service, calendar):
+def formatEvent(name, start_date, end_date):
     EVENT = {
     'summary': name,
     'location': '800 Howard St., San Francisco, CA 94103',
     'description': 'This is a test event. Hope it works correclty',
     'start': {
         'dateTime': start_date,
-        'timeZone': 'America/Chicago',
+        'timeZone': 'America/Los_Angeles',
     },
     'end': {
         'dateTime': end_date,
-        'timeZone': 'America/Chicago',
+        'timeZone': 'America/Los_Angeles',
     },
-    'recurrence': [
-        'RRULE:FREQ=DAILY;COUNT=1'
-    ],
     'reminders': {
         'useDefault': False,
         'overrides': [
@@ -85,9 +86,15 @@ def formatEvent(name, start_date, end_date, service, calendar):
         ],
     },
     }
-    EVENT = service.events().insert(calendarId=calendar, body=EVENT).execute()
-    return EVENT 
+    #EVENT = service.events().insert(calendarId=calendar, body=EVENT).execute()
+    return EVENT
 
+"""
+Creates a calendar on the users account 
+Creates ID for use 
+Returns ID for use 
+TO DO: Check if calendar already exist 
+"""
 
 def createCalendar(service):
    calendar = {
@@ -97,6 +104,12 @@ def createCalendar(service):
    calendar = service.calendars().insert(body=calendar).execute()
    return calendar
    
+"""
+Get the events from the calendar paramter
+Only gets the upcoming 10 events 
+Metadata return as a JSON Payload
+"""
+
 def getEvents(service, calendar):
     try:
         # Call the Calendar API
@@ -118,6 +131,10 @@ def getEvents(service, calendar):
 
     except HttpError as error:
         print('An error occurred: %s' % error)
+
+"""
+Used for testing -> only function that allows to create event
+"""
 
 def formatEvent2(service, calendar):
     EVENT = {
