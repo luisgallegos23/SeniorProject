@@ -11,18 +11,7 @@ from googleapiclient.errors import HttpError
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
-def test():
-    createEvents()
-    
-
-
-"""
-Reads MockData.csv file
-Reads file line by line -> creates events using data and add them to calendar
-Validates credientials to write/read form AP
-"""
-def createEvents():
-      
+def test():     
     creds = None
     
     if os.path.exists('token.json'):
@@ -41,24 +30,36 @@ def createEvents():
             token.write(creds.to_json())
 
     service = build('calendar', 'v3', credentials=creds)
-    calendar = createCalendar(service)
+
+    calendar = createCalendar(service)#Bug: Will create new calendar w/ events everytime program is ran --> Fix check if in database 
+
+    createEvents(calendar, service) #comment out after one run
+    getEvents(calendar, service) #get events that have been uploaded to the calendar 
     
 
-    file = open("/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/MockData.csv","r")
-    num = 0 #number of events being uploaded
-    file.readline()
-    for line in file:
-        if(num < 30): # Can be changed to number of events needed
-            num += 1  # Does not stop at num = 30
-            eventname, start_date, end_date, test = line.split(',')
-            EVENT = formatEvent(eventname, start_date, end_date)
-            EVENT = service.events().insert(calendarId=calendar['id'], body=EVENT).execute()
-            print('Event created: %s' % (EVENT.get('htmlLink')))
-        else:
-            break    
-    file.close()
-    getEvents(service,calendar['id'])
 
+"""
+Reads MockData.csv file
+Reads file line by line -> creates events using data and add them to calendar
+Validates credientials to write/read form AP
+"""
+def createEvents(calendar, service):
+    try:
+        file = open("/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/MockData.csv","r")
+        num = 0 #number of events being uploaded
+        file.readline()
+        for line in file:
+            if(num < 30): # Can be changed to number of events needed
+                num += 1  # Does not stop at num = 30
+                eventname, start_date, end_date, test = line.split(',')
+                EVENT = formatEvent(eventname, start_date, end_date)
+                EVENT = service.events().insert(calendarId=calendar['id'], body=EVENT).execute()
+                print('Event created: %s' % (EVENT.get('htmlLink')))
+            else:
+                break    
+        file.close()
+    except HttpError as error:
+        print('An error occurred: %s' % error)
 
 
 """
@@ -133,36 +134,6 @@ def getEvents(service, calendar):
     except HttpError as error:
         print('An error occurred: %s' % error)
 
-"""
-Used for testing -> only function that allows to create event
-"""
-
-def formatEvent2(service, calendar):
-    EVENT = {
-    'summary': 'test',
-    'location': '800 Howard St., San Francisco, CA 94103',
-    'description': 'This is a test event. Hope it works correclty',
-    'start': {
-        'dateTime': '2023-02-20T09:00:00-07:00',
-        'timeZone': 'America/Chicago',
-    },
-    'end': {
-        'dateTime': '2023-02-20T17:00:00-07:00',
-        'timeZone': 'America/Chicago',
-    },
-    'recurrence': [
-        'RRULE:FREQ=DAILY;COUNT=1'
-    ],
-    'reminders': {
-        'useDefault': False,
-        'overrides': [
-        {'method': 'email', 'minutes': 24 * 60},
-        {'method': 'popup', 'minutes': 10},
-        ],
-    },
-    }
-    EVENT = service.events().insert(calendarId=calendar, body=EVENT).execute()
-    return EVENT
 
 if __name__ == '__main__':
     test()
