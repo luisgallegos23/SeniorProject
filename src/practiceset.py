@@ -48,12 +48,12 @@ def createEvents():
     num = 0 #number of events being uploaded
     file.readline()
     for line in file:
-        if(num < 30): 
+        if(num < 30): # Can be changed to number of events needed
             num += 1  # Does not stop at num = 30
             eventname, start_date, end_date, test = line.split(',')
             EVENT = formatEvent(eventname, start_date, end_date)
             EVENT = service.events().insert(calendarId=calendar['id'], body=EVENT).execute()
-            print('%d Event created: %s' % (num, EVENT.get('htmlLink')))
+            print('Event created: %s' % (EVENT.get('htmlLink')))
         else:
             break    
     file.close()
