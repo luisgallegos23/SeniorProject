@@ -112,7 +112,7 @@ Only gets the upcoming 10 events
 Metadata return as a JSON Payload
 """
 
-def getEvents(service, calendar):
+def getEvents(calendar, service):
     try:
         # Call the Calendar API
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time

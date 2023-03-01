@@ -12,7 +12,7 @@ create table calendars(
     calendarID varchar(100) NOT NULL,
     calendarname varchar(255) NOT Null,
     constraint setcalendar primary key(email, ID)
-);
+); 
 
 drop table if exists creds;
 create table creds(
