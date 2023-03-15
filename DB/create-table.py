@@ -1,6 +1,6 @@
 import psycopg2
 
-conn = psycopg2.connect(host="d104.155.144.9", user="sylly", password="+\{j0(+8z\"y$B6,~", dbname="sylly")
+conn = psycopg2.connect(user="sylly", password="Sylly2023", dbname="Sylly", host="104.155.144.9")
 cur = conn.cursor()  # make a cursor (allows us to execute queries)
 
 file = open("schema.sql", "r") # open the file
