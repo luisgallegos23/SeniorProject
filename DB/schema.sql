@@ -14,10 +14,9 @@ create table calendars(
     constraint setcalendar primary key(email, calendarID)
 ); 
 
-drop table if exists creds;
+drop table if exists credentials;
 create table creds(
     credID int NOT NULL AUTO_INCREMENT,
-    email varchar(255) NOT NULL,
-    /* How to store json files
-    */
+    email varchar(255) primary key,
+    token json, 
 );
