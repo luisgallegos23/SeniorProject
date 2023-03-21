@@ -6,7 +6,7 @@ EventDictionary = {}
 NotEventDictionary = {}
 sizeDict = 0 #Number of words in EventDictionary
 sizeNDict = 0 #Number of words in NotEventDictionary
-regex = re.compile('[,\/\.!?]');
+regex = re.compile('[,\/\.!?:]');
 
 """
 Creates two Dictionaries from training files 
@@ -14,6 +14,7 @@ Creates two Dictionaries from training files
 def makeDict():
     createEventDicitonary('/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/trainingfiles/eventtrainingset.csv')
     createNotDicitonary('/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/trainingfiles/noteventtraining.csv')
+    #print("TrueDict: %d FalseDict: %d" % (sizeDict, sizeNDict))
 
 """
 Adds words to EventDictionary

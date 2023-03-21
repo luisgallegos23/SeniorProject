@@ -1,5 +1,6 @@
 import sys
-sys.path.insert(0,'/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/src')
+sys.path.insert(0,'/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/src') #will have to be updated once out
+
 import eventML
 import unittest
 
