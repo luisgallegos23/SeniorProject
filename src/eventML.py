@@ -1,24 +1,19 @@
 
 import math
+import re 
 
 EventDictionary = {}
 NotEventDictionary = {}
 sizeDict = 0 #Number of words in EventDictionary
 sizeNDict = 0 #Number of words in NotEventDictionary
+regex = re.compile('[,\/\.!?]');
 
 """
-Takes user input: Filename used to create dictionary to determine a string is event
+Creates two Dictionaries from training files 
 """
-def getTrainingEvent():
-    file = input("Training data file for EVENT dictionary: ")
-    return file
-
-"""
-Ask user input: Filename used to create NOT dictionary to determine string is NOT an event
-"""
-def getNotTrainingEvent():
-    file = input("Training data file for NOT dictionary: ")
-    return file
+def makeDict():
+    createEventDicitonary('/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/trainingfiles/eventtrainingset.csv')
+    createNotDicitonary('/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/trainingfiles/noteventtraining.csv')
 
 """
 Adds words to EventDictionary
@@ -27,19 +22,21 @@ Parameter: String (name of file)
 Key = String Value=Integer (# of times word read) 
 """
 def createEventDicitonary(filename):
+    global sizeDict
     file = open(filename)
     for line in file:
+        line = regex.sub('',line)
         line = line.rstrip()
         line = line.lower()
         wordarr = line.split(" ")
         for word in wordarr:
-            if(EventDictionary.get(word,0) == 0):
+            if (EventDictionary.get(word,0) == 0):
                 EventDictionary[word] = 1
                 sizeDict += 1;
             else:
                 val = EventDictionary.get(word)
-                val+=1
-                EventDictionary.update(word, val)
+                val += 1
+                EventDictionary[word] = val
 
     file.close()    
 
@@ -50,8 +47,10 @@ Parameter: String (name of file)
 Key = String Value=Integer (# of times word used) 
 """
 def createNotDicitonary(filename):
+    global sizeNDict
     file = open(filename)
     for line in file:
+        line = regex.sub('',line)
         line = line.rstrip()
         line = line.lower()
         wordarr = line.split(" ")
@@ -62,7 +61,7 @@ def createNotDicitonary(filename):
             else:
                 val = NotEventDictionary.get(word)
                 val+=1
-                NotEventDictionary.update(word, val)
+                NotEventDictionary[word] = val
 
     file.close() 
 
@@ -79,6 +78,7 @@ def calcEventProb(line):
     line =  line.rstrip()
     wordarr = line.split(" ")
     for word in wordarr:
+        #print("Word: %s Prob: %d " % (word, EventDictionary.get(word,0)))
         if(EventDictionary.get(word,0) != 0):
             value = EventDictionary.get(word) + 1 #smooths prob
             den = sizeDict + 2 #smooths
@@ -101,6 +101,7 @@ def notEventProb(line):
     line =  line.rstrip()
     wordarr = line.split(" ")
     for word in wordarr:
+        #print("Word: %s Prob: %d " % (word, NotEventDictionary.get(word,0)))
         if(NotEventDictionary.get(word,0) != 0):
             value = NotEventDictionary.get(word) + 1 #smooths prob
             den = sizeNDict + 2 #smooths
@@ -120,7 +121,9 @@ FALSE - String probability is not an event
 Parameter: String
 """
 def getEventBoolean(line):
-    if(calcEventProb(line) > notEventProb(line)):
+    line = regex.sub('',line)
+    print("Line: %s True: %.2f False: %.2f " % (line, calcEventProb(line), notEventProb(line)))
+    if(calcEventProb(line) < notEventProb(line)):
         return True
     
     return False
