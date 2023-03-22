@@ -1,9 +1,9 @@
 drop table if exists users;
 create table users(
-    email varchar(255) primary key,
-    passwordhash Binary(64) NOT NULL,
-    lastname varchar(255) NULL,
-    firstname varchar(255) NULL
+    email varchar(255) primary key NOT NULL,
+    passwordhash varchar(50) NOT NULL,
+    lastname varchar(255),
+    firstname varchar(255)
 );
 
 drop table if exists calendars;
@@ -14,9 +14,9 @@ create table calendars(
     constraint setcalendar primary key(email, calendarID)
 ); 
 
-drop table if exists credentials;
+drop table if exists creds;
 create table creds(
-    credID int NOT NULL AUTO_INCREMENT,
-    email varchar(255) primary key,
-    token json, 
+    email varchar(255) NOT NULL,
+    token json,
+    PRIMARY KEY (email)
 );

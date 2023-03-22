@@ -9,6 +9,7 @@ import click
 
 
 app = Flask(__name__)
+app.secret_key = "SyllyCalendar2023"
 ####################################################
 # Routes
 
@@ -20,7 +21,7 @@ def signin():
  elif request.form["step"] == "auth":
    conn = get_db()
    cursor = conn.cursor()
-   cursor.execute("select count(*) from users where email=%s and password=%s", [request.form["email"], request.form["password"]])
+   cursor.execute("select count(*) from users where email=%s and passwordhash=%s", [request.form["email"], request.form["password"]]) #change "passwordhash"->password
    count=cursor.fetchone();
    if(count == [1]):
      email = request.form["email"]
@@ -40,8 +41,7 @@ def signin():
 def connect_db():
     """Connects to the database."""
     debug("Connecting to DB.")
-    conn = psycopg2.connect(host="", user="", password="", dbname="",  #NEEDS TO FIX
-        cursor_factory=psycopg2.extras.DictCursor)
+    conn = psycopg2.connect(sslmode="verify-ca", sslrootcert="DB/server-ca.pem", sslcert="DB/client-cert.pem", sslkey="DB/client-key.pem", hostaddr="104.155.144.9", port="5432", user="sylly", dbname="sylly", password="Sylly2023")
     return conn
     
 def get_db():
