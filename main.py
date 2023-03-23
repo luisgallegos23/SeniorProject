@@ -6,6 +6,7 @@ import psycopg2.extras
 from flask import Flask, request, render_template, g, current_app, session
 from flask.cli import with_appcontext
 import click
+from src import DBhandle
 
 
 app = Flask(__name__)
@@ -19,11 +20,7 @@ def signin():
  if "step" not in request.form:     
   return render_template('signin.html', step="signin")
  elif request.form["step"] == "auth":
-   conn = get_db()
-   cursor = conn.cursor()
-   cursor.execute("select count(*) from users where email=%s and passwordhash=%s", [request.form["email"], request.form["password"]]) #change "passwordhash"->password
-   count=cursor.fetchone();
-   if(count == [1]):
+   if(DBhandle.checkUser(request.form["email"],request.form["password"]) == [1]):
      email = request.form["email"]
      session["email"] = email
      return render_template("home.html", step = "true")
@@ -51,6 +48,7 @@ def get_db():
     if "db" not in g:
         g.db = connect_db()
     return g.db
+
     
 @app.teardown_appcontext
 def close_db(e=None):
