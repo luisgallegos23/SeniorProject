@@ -27,7 +27,8 @@ def checkUser(email, key):
     cursor = conn.cursor()
     cursor.execute("SELECT count(*) FROM users WHERE email=%s AND password=%s", [email, key]) 
     count=cursor.fetchone()
-    if(count == [1]):
+    print(count)
+    if(count[0] == 1):
         return True
     return False
 
@@ -39,6 +40,7 @@ def addUser(email, key, fname, lname):
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("INSERT INTO users (email, password, lname, fname) VALUES (%s, %s, %s, %s)", [email, key, lname, fname])
+    conn.commit()
 
 """
 Adds a new calender object to the database
@@ -49,6 +51,7 @@ def addCalendar(email, calID, calname):
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("INSERT INTO calendars (email, calID, calname) VALUES (%s, %s, %s)", [email, calID, calname])
+    conn.commit()
 
 """
 Fetches a users calendar form the database 
@@ -83,6 +86,7 @@ def addCreds(email, token): #could have an error
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("INSERT INTO creds (email, token) VALUES (%s, %s)", [email, token])
+    conn.commit()
 
 """
 Fetches users Token credential for use to access Google API
@@ -103,6 +107,7 @@ def updateCreds(email, newtoken): #Could have an error
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("UPDATE creds SET token=%s WHERE email=%s", [newtoken,email])
+    conn.commit()
 
 
 

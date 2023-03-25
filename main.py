@@ -17,37 +17,24 @@ app.secret_key = "SyllyCalendar2023"
 
 @app.route("/", methods= ['get','post'])
 def signin():
- if "step" not in request.form:     
-  return render_template('signin.html', step="signin")
- elif request.form["step"] == "auth":
-   if(DBhandle.checkUser(request.form["email"],request.form["password"]) == [1]):
-     email = request.form["email"]
-     session["email"] = email
-     return render_template("home.html", step = "true")
-   else:
-    return render_template("home.html", step = "false")
-   
-##@app.route('/')
-##def homepage():
-    ##if "step"
-    ##return render_template("home.html")  
+    if "step" not in request.form:     
+        return render_template('signin.html', step="signin")
+    elif request.form["step"] == "auth":
+        if(DBhandle.checkUser(request.form["email"],request.form["password"]) == True):
+            email = request.form["email"]
+            session["email"] = email
+            return render_template("home.html", step = "true")
+        else:
+             return render_template("signin.html", step = "false")
 
-#####################################################
-# Database handling 
-  
-def connect_db():
-    """Connects to the database."""
-    debug("Connecting to DB.")
-    conn = psycopg2.connect(sslmode="verify-ca", sslrootcert="DB/server-ca.pem", sslcert="DB/client-cert.pem", sslkey="DB/client-key.pem", hostaddr="104.155.144.9", port="5432", user="sylly", dbname="sylly", password="Sylly2023")
-    return conn
-    
-def get_db():
-    """Retrieve the database connection or initialize it. The connection
-    is unique for each request and will be reused if this is called again.
-    """
-    if "db" not in g:
-        g.db = connect_db()
-    return g.db
+
+@app.route("/signup", methods=['get','post'])
+def signup():
+    if "step" not in request.form:     
+        return render_template('signup.html', step="signup")
+    elif request.form["step"] == "createuser":
+        DBhandle.addUser(request.form["email"], request.form["password"], request.form["fname"], request.form["lname"])
+        return render_template('signin.html', step="signin")
 
     
 @app.teardown_appcontext

@@ -103,6 +103,13 @@
     color: #ffffff;
     cursor: pointer;
   }
+
+  a{
+    font-size: 0.75rem;
+    color: #8B8E98;
+    font-weight: 600;
+  }
+  
   
   .sign-in_ggl {
     width: 100%;
