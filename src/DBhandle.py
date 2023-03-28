@@ -16,6 +16,7 @@ def get_db():
         g.db = connect_db()
     return g.db
 
+  
 """
 Fetches the number of times the user is located in the data
 'email' and 'key'(password) have to match to an existance user in database
@@ -63,7 +64,7 @@ def getCalendar(email, name):
     cursor = conn.cursor()
     cursor.execute("SELECT calID FROM calendars WHERE email=%s AND name=%s ", [email, name])
     data = cursor.fetchall()
-    return data
+    return data[0]
 
 """
 Fetches ALL the calendars of the current User
@@ -82,7 +83,7 @@ def getListCalendars(email):
 Adds the users corresponding TOKEN after authentication with API
 Takes the users email and the new constructed TOKEN for use 
 """
-def addCreds(email, token): #could have an error
+def addCreds(email, token):
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("INSERT INTO creds (email, token) VALUES (%s, %s)", [email, token])

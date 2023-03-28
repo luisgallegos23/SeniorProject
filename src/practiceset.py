@@ -45,7 +45,7 @@ Validates credientials to write/read form AP
 """
 def createEvents(calendar, service):
     try:
-        file = open("/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/MockData.csv","r")
+        file = open("/Users/luisgallegos/Desktop/Programming-Projects/SeniorProject/trainingfiles/MockData.csv","r")
         num = 0 #number of events being uploaded
         file.readline()
         for line in file:

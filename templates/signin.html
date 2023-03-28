@@ -8,7 +8,9 @@
     <body> 
         {% if step=="signin" %}
         <form class="form_container" action="{{ url_for('signin') }}" method= post>
-            <div class="logo_container"></div>
+            <div class="logo_container">
+                <img src="/static/syllylogo.png" alt="Italian Trulli" class="logo">
+            </div>
             <div class="title_container">
             <p class="title">SYLLY CALENDAR</p>
             <span class="subtitle">Welcome Sign In: </span>
