@@ -9,11 +9,11 @@ import DBhandle
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
-def authToken(email):
+def authToken(email): #
 
     creds = None
 
-    if DBhandle.existCreds(email) == True:
+    if DBhandle.existCreds(email) == True: #TODO: throws Attribute error 'tuple/str' object has no attribute 'keys'
         creds = Credentials.from_authorized_user_info(DBhandle.getCreds(email), SCOPES)
     
     # If there are no (valid) credentials available, let the user log in.
@@ -35,7 +35,7 @@ def authToken(email):
 Checks the the users current credentials are valid
 -> if true returns a build service to call Google Calendar API
 """
-def buildService(email):
+def buildService(email): #
     creds = authToken(email)
     service = build('calendar', 'v3', credentials=creds)
     return service 
@@ -45,7 +45,8 @@ Creates a calendar on the users account
 Takes the users email, and the name of the new calendar 
 Connects to the database and add date to table
 """
-def createCalendar(email, calname): #if calname already exist
+def createCalendar(email, calname):#
+    #if calname already exist
    calendar = {
     'summary': calname,
     'timeZone': 'America/Chicago' #only time-zone we are doing as of now 
@@ -57,7 +58,7 @@ def createCalendar(email, calname): #if calname already exist
 returns calendar resource from users account
 takes the users email and the calendar name to access 
 """
-def getCal(email, calname):
+def getCal(email, calname):#
     calid = DBhandle.getCalendar(email,calname)
     service = buildService(email)
     calendar = service.calendars().get(calendarId=calid).execute()
@@ -67,7 +68,7 @@ def getCal(email, calname):
 Creates a new event in the users calendar
 Takes paramters: Users email, calendar name, event name, start date of event, and end date of event
 """
-def createEvent(email, calname, eventname, start_date, end_date):
+def createEvent(email, calname, eventname, start_date, end_date):#
     service = buildService(email)
     calendar = getCal(email, calname) ##implement function
     try:
@@ -82,7 +83,8 @@ Sets the meta data to a JSON payload
 Returns the payload to be used
 Some metadata is automatically set, parameter values used user input
 """
-def formatEvent(name, start_date, end_date): #Current events will be ver low level just  take requirements 
+def formatEvent(name, start_date, end_date): #
+    #Current events will be ver low level just  take requirements 
     EVENT = {
     'summary': name,
     'start': {
@@ -103,7 +105,7 @@ Get the events from the calendar paramter
 Only gets the upcoming 10 events 
 Metadata return as a JSON Payload
 """
-def getEvents(calendarID, email):
+def getEvents(calendarID, email):#
     service = buildService(email)
     try:
         # Call the Calendar API
@@ -129,3 +131,6 @@ def getEvents(calendarID, email):
     return events
 
 
+def removeEvent(email,eventid, calendar):
+    service = buildService(email)
+    service.events().delete(calendarId=calendar['id'], eventId=eventid).execute()

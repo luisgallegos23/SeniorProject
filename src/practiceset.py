@@ -54,6 +54,7 @@ def createEvents(calendar, service):
                 eventname, start_date, end_date, test = line.split(',')
                 EVENT = formatEvent(eventname, start_date, end_date)
                 EVENT = service.events().insert(calendarId=calendar['id'], body=EVENT).execute()
+                print(EVENT)
                 print('Event created: %s' % (EVENT.get('htmlLink')))
             else:
                 break    
@@ -118,14 +119,13 @@ def getEvents(calendar, service):
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
         print('Getting the upcoming 10 events')
         events_result = service.events().list(calendarId=calendar, timeMin=now,
-                                              maxResults=10, singleEvents=True,
+                                              maxResults=5, singleEvents=True,
                                               orderBy='startTime').execute()
         events = events_result.get('items', [])
 
         if not events:
             print('No upcoming events found.')
             return
-
         # Prints the start and name of the next 10 events
         for event in events:
             start = event['start'].get('dateTime', event['start'].get('date'))
