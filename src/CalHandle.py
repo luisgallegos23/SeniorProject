@@ -1,4 +1,3 @@
-import json
 import datetime
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -47,34 +46,42 @@ Connects to the database and add date to table
 """
 def createCalendar(email, calname):#
     #if calname already exist
-   calendar = {
-    'summary': calname,
-    'timeZone': 'America/Chicago' #only time-zone we are doing as of now 
-    }
-   calendar = buildService(email).calendars().insert(body=calendar).execute()
-   DBhandle.addCalendar(email, calendar['id'],calendar['summary'])
+    try: 
+        calendar = {
+            'summary': calname,
+            'timeZone': 'America/Chicago' #only time-zone we are doing as of now 
+            }
+        calendar = buildService(email).calendars().insert(body=calendar).execute()
+        DBhandle.addCalendar(email, calendar['id'],calendar['summary'])
+
+    except HttpError as error:
+        print('An error occurred: %s' % error)
 
 """
 returns calendar resource from users account
 takes the users email and the calendar name to access 
 """
-def getCal(email, calname):#
-    calid = DBhandle.getCalendar(email,calname)
-    service = buildService(email)
-    calendar = service.calendars().get(calendarId=calid).execute()
-    return calendar
+def getCal(email, calname):
+    try:
+        calid = DBhandle.getCalendar(email,calname)
+        service = buildService(email)
+        calendar = service.calendars().get(calendarId=calid).execute()
+        return calendar
+    
+    except HttpError as error:
+        print('An error occurred: %s' % error)
 
 """
 Creates a new event in the users calendar
 Takes paramters: Users email, calendar name, event name, start date of event, and end date of event
 """
 def createEvent(email, calname, eventname, start_date, end_date):#
-    service = buildService(email)
-    calendar = getCal(email, calname) ##implement function
     try:
+        service = buildService(email)
+        calendar = getCal(email, calname) 
         EVENT = formatEvent(eventname, start_date, end_date)
-        EVENT = service.events().insert(calendarId=calendar['id'], body=EVENT).execute()
-        print('Event created: %s' % (EVENT.get('htmlLink'))) 
+        EVENT = service.events().insert(calendarId=calendar['id'], body=EVENT).execute() 
+
     except HttpError as error:
         print('An error occurred: %s' % error)
 
@@ -110,10 +117,10 @@ def getEvents(calendarID, email):#
     try:
         # Call the Calendar API
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-        print('Getting the upcoming 10 events')
+        print('Getting the upcoming events')
         events_result = service.events().list(calendarId=calendarID, timeMin=now,
                                               maxResults=10, singleEvents=True,
-                                              orderBy='startTime').execute() #maxresults can be alters 
+                                              orderBy='startTime').execute() #maxresults can be altered as well as minTime and maxTIme 
         events = events_result.get('items', [])
 
         if not events:
@@ -121,16 +128,27 @@ def getEvents(calendarID, email):#
             return
 
         # Prints the start and name of the next 10 events
-        for event in events:
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            print(start, event['summary'])
+        #for event in events:
+            #start = event['start'].get('dateTime', event['start'].get('date'))
+            #print(start, event['summary'])
+
+        return events    
 
     except HttpError as error:
         print('An error occurred: %s' % error)
 
-    return events
+    
 
 
-def removeEvent(email,eventid, calendar):
-    service = buildService(email)
-    service.events().delete(calendarId=calendar['id'], eventId=eventid).execute()
+def removeEvent(email,eventid, calendar): #TODO: Test 
+    try:
+        service = buildService(email)
+        service.events().delete(calendarId=calendar['id'], eventId=eventid).execute()
+    
+    except HttpError as error:
+        print('An error occurred: %s' % error)
+
+
+def createPDFEvents(email, dict): #TODO: dict could change 
+    for event in dict:
+        createEvent(email,'Sylly', event['name'], event['start'], event['end'])
