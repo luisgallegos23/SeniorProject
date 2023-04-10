@@ -1,12 +1,11 @@
 import psycopg2
 import psycopg2.extras
-import json
-from flask import Flask, request, render_template, g, current_app, session
+from flask import g
 
 """Connects to the database."""  
 def connect_db():
     #debug("Connecting to DB.")
-    conn = psycopg2.connect(sslmode="verify-ca", sslrootcert="../DB/server-ca.pem", sslcert="../DB/client-cert.pem", sslkey="../DB/client-key.pem", hostaddr="104.155.144.9", port="5432", user="sylly", dbname="sylly", password="Sylly2023") #remove ../ after testing
+    conn = psycopg2.connect(sslmode="verify-ca", sslrootcert="DB/server-ca.pem", sslcert="DB/client-cert.pem", sslkey="DB/client-key.pem", hostaddr="104.155.144.9", port="5432", user="sylly", dbname="sylly", password="Sylly2023") #remove ../ after testing
     return conn
 
 """
