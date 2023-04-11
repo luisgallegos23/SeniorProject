@@ -11,7 +11,7 @@ create table calendars(
     email varchar(255) NOT NULL,
     calID varchar(100) NOT NULL,
     calname varchar(255) NOT Null,
-    constraint setcalendar primary key(email, calID)
+    constraint setcalendar primary key(email, calname)
 ); 
 
 drop table if exists creds;
