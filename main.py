@@ -6,6 +6,9 @@ import psycopg2.extras
 from flask import Flask, request, render_template, g, current_app, session
 from flask.cli import with_appcontext
 import click
+import sys
+import os
+from src import CalHandle
 from src import DBhandle
 
 
@@ -34,6 +37,7 @@ def signup():
         return render_template('signup.html', step="signup")
     elif request.form["step"] == "createuser":
         DBhandle.addUser(request.form["email"], request.form["password"], request.form["fname"], request.form["lname"])
+        CalHandle.authToken(request.form["email"])
         return render_template('signin.html', step="signin")
 
     

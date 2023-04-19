@@ -4,15 +4,13 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-import DBhandle
+from src import DBhandle
 
-SCOPES = 'https://www.googleapis.com/auth/calendar'
-
-def authToken(email): #
-
+def authToken(email):
+    SCOPES = 'https://www.googleapis.com/auth/calendar'
     creds = None
 
-    if DBhandle.existCreds(email) == True: #TODO: throws Attribute error 'tuple/str' object has no attribute 'keys'
+    if DBhandle.existCreds(email) == True:
         creds = Credentials.from_authorized_user_info(DBhandle.getCreds(email), SCOPES)
     
     # If there are no (valid) credentials available, let the user log in.
@@ -21,7 +19,7 @@ def authToken(email): #
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                'src/credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         DBhandle.addCreds(email, creds.to_json())
 
@@ -34,7 +32,7 @@ def authToken(email): #
 Checks the the users current credentials are valid
 -> if true returns a build service to call Google Calendar API
 """
-def buildService(email): #
+def buildService(email): 
     creds = authToken(email)
     service = build('calendar', 'v3', credentials=creds)
     return service 
@@ -90,7 +88,7 @@ Sets the meta data to a JSON payload
 Returns the payload to be used
 Some metadata is automatically set, parameter values used user input
 """
-def formatEvent(name, start_date, end_date): #
+def formatEvent(name, start_date, end_date): #TODO: add notes
     #Current events will be ver low level just  take requirements 
     EVENT = {
     'summary': name,
