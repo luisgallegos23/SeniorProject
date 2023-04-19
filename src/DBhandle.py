@@ -102,7 +102,7 @@ Takes the email of the user
 returns a list of Objects 
 Access each object in FOR LOOP
 """
-def getListCalendars(email):#TODO: Test
+def getListCalendars(email):#change not unique 
     try:
         conn = get_db()
         cursor = conn.cursor()

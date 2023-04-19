@@ -6,8 +6,10 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from src import DBhandle
 
+SCOPES = 'https://www.googleapis.com/auth/calendar'
+
 def authToken(email):
-    SCOPES = 'https://www.googleapis.com/auth/calendar'
+    
     creds = None
 
     if DBhandle.existCreds(email) == True:

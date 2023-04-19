@@ -1,6 +1,10 @@
 <html>
     <head>
         <title>Home</title>
+        <link rel="style/javascript" href= "{{ url_for('static',filename='app.js') }}">
+        <script type="text/javascript">
+          printdata({{data|tojson}})
+        </script>
     </head>
 <body>
   <body style="background-color:cream;">

@@ -26,7 +26,8 @@ def signin():
         if(DBhandle.checkUser(request.form["email"],request.form["password"]) == True):
             email = request.form["email"]
             session["email"] = email
-            return render_template("home.html", step = "true")
+            data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
+            return render_template("home.html", step = "true", data = data)
         else:
              return render_template("signin.html", step = "false")
 
