@@ -29,9 +29,24 @@ def checkUser(email, key):
         conn = get_db()
         cursor = conn.cursor()
         cursor.execute("SELECT count(*) FROM users WHERE email=%s AND password=%s", [email, key]) 
-        count=cursor.fetchone()
-        conn.close()
-        if(count[0] == 1):
+        count=cursor.fetchone()[0]
+        print(count)
+        if(count == 1):
+            return True
+        return False
+    
+    except(Exception, psycopg2.Error) as error:
+        print("Error authenticating user with PosgresSQL Database ", error)
+
+
+def checkUserExist(email):
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT count(*) FROM users WHERE email=%s", [email]) 
+        count=cursor.fetchone()[0]
+        print(count)
+        if(count == 1):
             return True
         return False
     
@@ -48,7 +63,6 @@ def addUser(email, key, fname, lname):
         cursor = conn.cursor()
         cursor.execute("INSERT INTO users (email, password, lname, fname) VALUES (%s, %s, %s, %s)", [email, key, lname, fname])
         conn.commit()
-        conn.close()
     
     except(Exception, psycopg2.Error) as error:
         print("Error adding user to PostgresSQL database", error)
@@ -64,7 +78,6 @@ def addCalendar(email, calID, calname):
         cursor = conn.cursor()
         cursor.execute("INSERT INTO calendars (email, calID, calname) VALUES (%s, %s, %s)", [email, calID, calname])
         conn.commit()
-        conn.close()
 
     except(Exception, psycopg2.Error) as error:
         print("Error adding calendar to PostgresSQL database", error)    
@@ -80,7 +93,6 @@ def getCalendar(email, name):
         cursor = conn.cursor()
         cursor.execute("SELECT calID FROM calendars WHERE email=%s AND calname=%s ", [email, name])
         data = cursor.fetchone()[0]
-        conn.close()
         return data
     
     except(Exception, psycopg2.Error) as error:
@@ -93,7 +105,6 @@ def existCal(email, calname):
         cursor = conn.cursor()
         cursor.execute("SELECT count(*) FROM calendars WHERE email=%s and calname=%s", [email, calname]) 
         count=cursor.fetchone()
-        conn.close()
         if(count[0] == 1):
             return True
         return False
@@ -107,13 +118,12 @@ Takes the email of the user
 returns a list of Objects 
 Access each object in FOR LOOP
 """
-def getListCalendars(email):#TODO: Test
+def getListCalendars(email):#change not unique 
     try:
         conn = get_db()
         cursor = conn.cursor()
         cursor.execute("SELECT calID FROM calendars WHERE email=%s ", [email])
         data = cursor.fetchall()
-        conn.close()
         return data
     
     except(Exception, psycopg2.Error) as error:
@@ -129,7 +139,6 @@ def addCreds(email, token):#
         cursor = conn.cursor()
         cursor.execute("INSERT INTO creds (email, token) VALUES (%s, %s)", [email, token])
         conn.commit()
-        conn.close()
 
     except(Exception, psycopg2.Error) as error:
         print("Error adding token to PostgresSQL database", error)
@@ -144,7 +153,6 @@ def getCreds(email):
         cursor = conn.cursor()
         cursor.execute("SELECT token FROM creds WHERE email=%s ", [email])
         data = cursor.fetchone()[0]
-        conn.close()
         return data
     
     except(Exception, psycopg2.Error) as error:
@@ -160,7 +168,6 @@ def updateCreds(email, newtoken): #Could have an error #TODO: Test
         cursor = conn.cursor()
         cursor.execute("UPDATE creds SET token=%s WHERE email=%s", [newtoken,email])
         conn.commit()
-        conn.close()
     
     except(Exception, psycopg2.Error) as error:
         print("Error updating token to PostgresSQL database", error)
@@ -173,7 +180,6 @@ def existCreds(email): #
         cursor = conn.cursor()
         cursor.execute("SELECT count(*) FROM creds WHERE email=%s ", [email]) 
         count=cursor.fetchone()
-        conn.close()
         if(count[0] == 1):
             return True
         return False
