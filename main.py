@@ -21,7 +21,7 @@ app.secret_key = "SyllyCalendar2023"
 @app.route("/", methods= ['get','post'])
 def signin():
     if "step" not in request.form:     
-        return render_template('signin.html', step="signin")
+        return render_template('signin.html', step="signin", visibility="none" )
     elif request.form["step"] == "auth":
         if(DBhandle.checkUser(request.form["email"],request.form["password"]) == True):
             email = request.form["email"]
@@ -29,17 +29,20 @@ def signin():
             data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
             return render_template("home.html", step = "true", data = data)
         else:
-             return render_template("signin.html", step = "false")
+             return render_template("signin.html", step = "signin", visibility="block" )
 
 
 @app.route("/signup", methods=['get','post'])
 def signup():
     if "step" not in request.form:     
-        return render_template('signup.html', step="signup")
+        return render_template('signup.html', step="signup", visibility="none")
     elif request.form["step"] == "createuser":
-        DBhandle.addUser(request.form["email"], request.form["password"], request.form["fname"], request.form["lname"])
-        CalHandle.authToken(request.form["email"])
-        return render_template('signin.html', step="signin")
+        if(DBhandle.checkUserExist(request.form["email"]) == True):
+            return render_template("signup.html", step = "signup", visibility="block")
+        else:
+            DBhandle.addUser(request.form["email"], request.form["password"], request.form["fname"], request.form["lname"])
+            CalHandle.authToken(request.form["email"])
+            return render_template('signin.html', step="signin", visibility="none")
 
     
 @app.teardown_appcontext

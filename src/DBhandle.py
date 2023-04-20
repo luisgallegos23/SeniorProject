@@ -29,8 +29,24 @@ def checkUser(email, key):
         conn = get_db()
         cursor = conn.cursor()
         cursor.execute("SELECT count(*) FROM users WHERE email=%s AND password=%s", [email, key]) 
-        count=cursor.fetchone()
-        if(count[0] == 1):
+        count=cursor.fetchone()[0]
+        print(count)
+        if(count == 1):
+            return True
+        return False
+    
+    except(Exception, psycopg2.Error) as error:
+        print("Error authenticating user with PosgresSQL Database ", error)
+
+
+def checkUserExist(email):
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT count(*) FROM users WHERE email=%s", [email]) 
+        count=cursor.fetchone()[0]
+        print(count)
+        if(count == 1):
             return True
         return False
     
