@@ -5,8 +5,6 @@ import psycopg2
 import psycopg2.extras
 from flask import Flask, request, render_template, g, current_app, session
 from flask.cli import with_appcontext
-import click
-import sys
 import os
 from src import CalHandle
 from src import DBhandle
@@ -27,7 +25,7 @@ def signin():
             email = request.form["email"]
             session["email"] = email
             data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
-            return render_template("home.html", step = "true", data = data)
+            return render_template("uploadevents.html", data = data)
         else:
              return render_template("signin.html", step = "signin", visibility="block" )
 

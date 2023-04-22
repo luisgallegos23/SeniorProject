@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Upload Event</title>
+        <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    </head>
+<body>
+    <form id = "config" onload="buildEventConfig({{data|tojson}})">
+        <script>
+            function buildEventConfig(data){
+            var val = 0;
+            for (var event in data.jsonData){
+                consol.log(event);
+                var element = (
+                    `<label for="event-title">Event Title:</label>
+                    <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="${event.summary}">
+
+                    <label for="start-date">Start Date:</label>
+                    <input type="date" class="ininfo" id="start-date${val}" name="start-date" value="${event.start.date}">
+
+                    <label for="start-time">Start Time:</label>
+                    <input type="time" class="ininfo" id="start-time${val}" name="start-time" value="">
+
+                    <label for="end-date">End Date:</label>
+                    <input type="date" class="ininfo" id="end-date${val}" name="end-date" value="${event.end.date}">
+
+                    <label for="end-time">End Time:</label>
+                    <input type="time" class="ininfo" id="end-time${val}" name="end-time" value="">
+
+                    <label for="description">Notes/Description:</label>
+                    <textarea id="description${val}" name="description" value=""></textarea>`
+                )
+                document.getElementById('config').innerHTML += element;
+                val++;
+                };
+        }
+        </script>
+
+        <input type="submit" value="Create">
+    </form>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            alert("Event Successfully Created");
+            setTimeout(() => {
+                window.location.href = "main.html";
+            }, 1500); // wait for 2 seconds before redirecting
+        });
+    </script>
+</body>
+</html>

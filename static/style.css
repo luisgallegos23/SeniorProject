@@ -149,3 +149,37 @@
 p {
   padding: 0px;
 }
+
+#config {
+  margin: 50px auto;
+  max-width: 500px;
+  text-align: center;
+}
+
+.ininfo[type=text], .ininfo[type=date], .ininfo[type=time], textarea {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea {
+  height: 100px;
+}
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 20px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+input[type=submit]:hover {
+  background-color: #3e8e41;
+}
