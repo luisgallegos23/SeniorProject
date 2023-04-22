@@ -3,14 +3,18 @@
     <head>
         <title>Upload Event</title>
         <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+        
     </head>
 <body>
-    <form id = "config" onload="buildEventConfig({{data|tojson}})">
+    <form id = "config">
+        <input id="data" type="hidden" name="data" value="{{data}}">
         <script>
-            function buildEventConfig(data){
-            var val = 0;
-            for (var event in data.jsonData){
-                consol.log(event);
+                var e = document.getElementById('data').value;
+                console.log(e)
+                var data = JSON.parse(e);
+                var val = 1;
+                data.forEach(event => {
+                    document.getElementById('config').innerHTML += `<p> Event: ${val}</p>`;
                 var element = (
                     `<label for="event-title">Event Title:</label>
                     <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="${event.summary}">
@@ -32,8 +36,7 @@
                 )
                 document.getElementById('config').innerHTML += element;
                 val++;
-                };
-        }
+                });
         </script>
 
         <input type="submit" value="Create">

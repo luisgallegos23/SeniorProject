@@ -8,6 +8,7 @@ from flask.cli import with_appcontext
 import os
 from src import CalHandle
 from src import DBhandle
+import json
 
 
 app = Flask(__name__)
@@ -25,7 +26,7 @@ def signin():
             email = request.form["email"]
             session["email"] = email
             data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
-            return render_template("uploadevents.html", data = data)
+            return render_template("uploadevents.html", data = json.dumps(data))
         else:
              return render_template("signin.html", step = "signin", visibility="block" )
 
@@ -67,4 +68,4 @@ def debug(s):
 #####################################################
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080, debug=False)  # can turn off debugging with False
+    app.run(host='0.0.0.0', port=8080, debug=True)  # can turn off debugging with False
