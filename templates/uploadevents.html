@@ -3,53 +3,79 @@
     <head>
         <title>Upload Event</title>
         <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
-        
-    </head>
-<body>
-    <form id = "config">
-        <input id="data" type="hidden" name="data" value="{{data}}">
-        <script>
+        <script> 
+            var val = 1;
+
+            function buildForm(){
                 var e = document.getElementById('data').value;
                 console.log(e)
                 var data = JSON.parse(e);
-                var val = 1;
                 data.forEach(event => {
-                    document.getElementById('config').innerHTML += `<p> Event: ${val}</p>`;
                 var element = (
-                    `<label for="event-title">Event Title:</label>
-                    <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="${event.summary}">
+                    `<div>
+                        <p class="eventheader"> Event: ${val}</p>
+                        <label for="event-title">Event Title:</label>
+                        <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="${event.summary}">
 
-                    <label for="start-date">Start Date:</label>
-                    <input type="date" class="ininfo" id="start-date${val}" name="start-date" value="${event.start.date}">
+                        <label for="start-date">Start Date:</label>
+                        <input type="date" class="ininfo" id="start-date${val}" name="start-date" value="${event.start.date}">
 
-                    <label for="start-time">Start Time:</label>
-                    <input type="time" class="ininfo" id="start-time${val}" name="start-time" value="">
+                        <label for="start-time">Start Time:</label>
+                        <input type="time" class="ininfo" id="start-time${val}" name="start-time" value="">
 
-                    <label for="end-date">End Date:</label>
-                    <input type="date" class="ininfo" id="end-date${val}" name="end-date" value="${event.end.date}">
+                        <label for="end-date">End Date:</label>
+                        <input type="date" class="ininfo" id="end-date${val}" name="end-date" value="${event.end.date}">
 
-                    <label for="end-time">End Time:</label>
-                    <input type="time" class="ininfo" id="end-time${val}" name="end-time" value="">
+                        <label for="end-time">End Time:</label>
+                        <input type="time" class="ininfo" id="end-time${val}" name="end-time" value="">
 
-                    <label for="description">Notes/Description:</label>
-                    <textarea id="description${val}" name="description" value=""></textarea>`
-                )
-                document.getElementById('config').innerHTML += element;
+                        <label for="description">Notes/Description:</label>
+                        <textarea id="description${val}" name="description" value=""></textarea>
+                    </div>`
+                );
+                document.getElementById('container').innerHTML += element;
                 val++;
                 });
-        </script>
+            }
 
+            function addForm(){
+                var element = (
+                    `<div>
+                        <p class="eventheader"> Event: ${val}</p>
+                        <label for="event-title">Event Title:</label>
+                        <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="">
+
+                        <label for="start-date">Start Date:</label>
+                        <input type="date" class="ininfo" id="start-date${val}" name="start-date" value="">
+
+                        <label for="start-time">Start Time:</label>
+                        <input type="time" class="ininfo" id="start-time${val}" name="start-time" value="">
+
+                        <label for="end-date">End Date:</label>
+                        <input type="date" class="ininfo" id="end-date${val}" name="end-date" value="">
+
+                        <label for="end-time">End Time:</label>
+                        <input type="time" class="ininfo" id="end-time${val}" name="end-time" value="">
+
+                        <label for="description">Notes/Description:</label>
+                        <textarea id="description${val}" name="description" value=""></textarea>
+                    </div>`
+                )
+                document.getElementById('container').innerHTML += element;
+                val++;
+            }
+
+        </script>
+    </head>
+<body>
+
+    <form id = "config" class="form" onload="buildForm()">
+        <input id="data" type="hidden" name="data" value="{{data}}">
+        <div id='container'>
+            <script>buildForm()</script>
+        </div>  
+        <div class="addevent" onclick="addForm()"></div>
         <input type="submit" value="Create">
     </form>
-
-    <script>
-        document.querySelector('form').addEventListener('submit', (event) => {
-            event.preventDefault();
-            alert("Event Successfully Created");
-            setTimeout(() => {
-                window.location.href = "main.html";
-            }, 1500); // wait for 2 seconds before redirecting
-        });
-    </script>
 </body>
 </html>

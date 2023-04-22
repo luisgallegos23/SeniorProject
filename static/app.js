@@ -1,10 +1,31 @@
 function printdata(data){
     console.log(data);
 }
+function addForm(){
+    var val = 0;
+    var element = (
+        `<div>
+            <label for="event-title">Event Title:</label>
+            <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="">
 
+            <label for="start-date">Start Date:</label>
+            <input type="date" class="ininfo" id="start-date${val}" name="start-date" value="">
 
-function buildEventConfig(){
-    document.getElementById('config').innerHTML = "<p> Hello World </p>";
+            <label for="start-time">Start Time:</label>
+            <input type="time" class="ininfo" id="start-time${val}" name="start-time" value="">
+
+            <label for="end-date">End Date:</label>
+            <input type="date" class="ininfo" id="end-date${val}" name="end-date" value="">
+
+            <label for="end-time">End Time:</label>
+            <input type="time" class="ininfo" id="end-time${val}" name="end-time" value="">
+
+            <label for="description">Notes/Description:</label>
+            <textarea id="description${val}" name="description" value=""></textarea>
+        </div>`
+    )
+    document.getElementById('container').innerHTML += element;
+    val++;
 }
 
 function buildConfig(data){
