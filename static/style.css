@@ -1,5 +1,6 @@
 body {
   background-color:#F7F7F8;
+  font-family: "Inter", sans-serif;
 }
 .form_container {
     position: absolute; /* */
@@ -209,20 +210,51 @@ input[type=submit]:hover {
   background-color: rgb(0,0,0)
   }
   
-  .addevent::before {
-    content: "+";
-    height:50px;
-    width:50px;
-    font-size:50px;
-    display:flex;
-    flex-direction:row;
-    align-items:center;
-    justify-content:center;
-    font-weight:bold;
-    font-family:courier;
-    color:white;
-  }
+.addevent::before {
+  content: "+";
+  height:50px;
+  width:50px;
+  font-size:50px;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  font-family:courier;
+  color:white;
+}
 
-  .addevent:hover{
-    background-color: #36454f;
+.addevent:hover{
+  background-color: #36454f;
+}
+
+.remove {
+  border-radius: 0%;
+  width: 25px;
+  height: 25px;
+  background-color: #fff;
+  border: solid black;
   }
+  
+.remove::before {
+  content: "X";
+  height:25px;
+  width:25px;
+  font-size:25px;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  font-family:courier;
+  color:#000;
+}
+
+.remove:hover{
+  background-color: #ff0000;
+}
+
+.sep{
+  border-top: 4px solid #000;
+  border-radius: 5px;
+}

@@ -8,11 +8,12 @@
 
             function buildForm(){
                 var e = document.getElementById('data').value;
-                console.log(e)
                 var data = JSON.parse(e);
+                val = 1;
                 data.forEach(event => {
                 var element = (
-                    `<div>
+                    `<div id="div${val}">
+                        <div class="remove" onclick="removeDiv('div${val}')"></div>
                         <p class="eventheader"> Event: ${val}</p>
                         <label for="event-title">Event Title:</label>
                         <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="${event.summary}">
@@ -31,16 +32,23 @@
 
                         <label for="description">Notes/Description:</label>
                         <textarea id="description${val}" name="description" value=""></textarea>
+                        <hr class="sep">
                     </div>`
                 );
                 document.getElementById('container').innerHTML += element;
                 val++;
                 });
-            }
+                }
+
+                function removeDiv(id) {
+                    var element = document.getElementById(id);
+                    element.remove();
+                }
 
             function addForm(){
                 var element = (
                     `<div>
+                        <div class="remove" onclick="removeDiv('div${val}')"></div>
                         <p class="eventheader"> Event: ${val}</p>
                         <label for="event-title">Event Title:</label>
                         <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="">
@@ -59,6 +67,7 @@
 
                         <label for="description">Notes/Description:</label>
                         <textarea id="description${val}" name="description" value=""></textarea>
+                        <hr class="sep">
                     </div>`
                 )
                 document.getElementById('container').innerHTML += element;
