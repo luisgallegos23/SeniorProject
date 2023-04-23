@@ -1,14 +1,1593 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Home</title>
-        <link rel="style/javascript" href= "{{ url_for('static',filename='app.js') }}">
-    </head>
+<head>
+	<title>Calendar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial;
+  color: black;
+}
+
+.split1 {
+  height: 95%;
+  width: 20%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+  
+.split2 {
+  height: 95%;
+  width: 80%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.left {
+  left: 0;
+  background-color: lightgreen;
+}
+
+.right {
+  right: 0;
+  background-color: white;
+}
+
+.centered {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+	
+.centered2 {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.centered img {
+  width: 150px;
+  border-radius: 50%;
+}
+</style>
+</head>
 <body>
-  <body style="background-color:cream;">
-  <h1 style="color:red; text-align:center;">Welcome to SyllyCalendar</h1>
+
+<div class="split1 left">
+  <div class="centered">
+<head>
+<title>Upload PDF</title>
+<style>
+	.center {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 5vh;
+		flex-direction: column;
+	}
+	.clases,
+	.todo {
+		top: 50%;
+		margin-left: 15px;
+		margin-right: auto;
+		width: 80%;
+		font-family: Arial, sans-serif;
+		font-size: 13px;
+		line-height: 1.5;
+	}
+	.class-info {
+  		display: none;
+	}
+	.containerLogo {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 20vh;
+		max-height: 500px;
+		}
+		
+		img {
+			max-width: 100%;
+			max-height: 100%;
+			object-fit: contain;
+			border: 2px solid black;
+		}
+	.left-align {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		position: absolute;
+  		top: 30%;
+	}
+</style>
+</head>
+<body>
+	<div class="containerLogo">
+		<img src="SyllyLogo.png">
+	</div>
+	<div class="center">
+		<a href="Upload.html"><button>Add New Class</button></a>
+	</div>
+	<div class="center2">
+		<a href="{{ url_for('uploadevents') }}"><button>Add New Event</button></a>
+	</div>
+	  </div>
+	<div class="left-align">
+	<!-- These elements will be left-aligned -->
+	<div class="classes" style="margin-left: 15px;">
+  		<h2>Classes</h2>
+ 		 <ul>
+  		  <li>
+  		    <input type="checkbox" id="comp251" onchange="toggleClass('comp251')" checked>
+ 		     <label for="comp251">Comp 251</label>
+		    </li>
+		    <li>
+ 		     <input type="checkbox" id="comp375" onchange="toggleClass('comp375')" checked>
+ 		     <label for="comp375">Comp 375</label>
+ 		   </li>
+ 		   <li>
+  		    <input type="checkbox" id="comp485" onchange="toggleClass('comp485')" checked>
+  		    <label for="comp485">Comp 485</label>
+  		  </li>
+  		  <li>
+  		    <input type="checkbox" id="math250" onchange="toggleClass('math250')" checked>
+  		    <label for="math250">Math 250</label>
+ 		   </li>
+		    <li>
+    		  <input type="checkbox" id="eng102" onchange="toggleClass('eng102')" checked>
+    		  <label for="eng102">English 102</label>
+  		  </li>
+		  </ul>
+		</div>
+	
+	<div class="todo">
+	<h2>To-Do List</h2>
+	<ul id="todo-list">
+		<li><input type="checkbox" name="todo-item" value="Comp 251 - Test 2"> Comp 251 - Test 2</li>
+		<li><input type="checkbox" name="todo-item" value="Comp 375 - Project 3"> Comp 375 - Project 3</li>
+		<li><input type="checkbox" name="todo-item" value="Comp 486 - Project 6"> Comp 486 - Project 6</li>
+		<li><input type="checkbox" name="todo-item" value="Math 250 - HW 7"> Math 250 - HW 7</li>
+		<li><input type="checkbox" name="todo-item" value="English 102 - Essay 2"> English 102 - Essay 2</li>
+	</ul>
+	<input type="text" id="new-item" placeholder="Add new item">
+	<button id="add-button">Add</button>
+	</div>
+	</div>
 </body>
-  <h2 style="text-align:center;">This site is designed to read uploaded PDF documents, linked website calendars, and personal events to provide users with a calendar of all their events</h2>
-  <div style="display: center;">
-    <img src="https://static.vecteezy.com/system/resources/previews/001/970/338/original/building-under-construction-site-free-vector.jpg" alt="Second Meme" height="350" width="500">
+
 </div>
+
+<div class="split2 right">
+    <head>
+  <meta charset="UTF-8">
+  <title>Calendar</title>
+  <style>
+    /* styling for calendar */
+   table {
+  border-collapse: collapse;
+  margin: auto;
+  width: 90%; 
+  height: 300px;
+  overflow-y: scroll;
+	}
+	td {
+  	padding: 10px;
+	height: auto;
+  	border: 1px solid black;
+	}
+.grey {
+        background-color: #BEBEBE;
+    }
+	  
+button {
+  	margin: 10px;
+	}
+    #Home {
+      position: fixed;
+      top: 10px;
+      right: 100px;
+    }
+	#Profile {
+        position: fixed;
+      	top: 10px;
+      	right: 20px;
+      }
+  </style>
+  </style>
+</head>
+<body>
+        <!-- back-to-home button -->
+    <a href="index.html"><button class="button" id="Home">Home</button></a>
+	<!-- Profile button -->
+	<a href="Profile.html"><button class="button" id="Profile">Profile</button></a>
+  <!-- buttons for view options -->
+  <div id="view-options" style="text-align: center;">
+    <button onclick="showDailyAndSetDate()">Daily</button>
+    <button onclick="showWeeklyAndSetDate()">Weekly</button>
+    <button onclick="showMonthly()">Monthly</button>
+   <div>
+
+  <!-- daily view calendar -->
+  <div id="daily" style="text-align: center; display:none">
+  	<h1 id="currentDate"></h1>
+  <table>
+   <tr>
+     <th>Time</th>
+     <th>Event</th>
+    </tr>
+    <!-- repeat rows for each hour -->
+    <tr>
+      <td>12am</td>
+      <td></td>
+   </tr>
+   <tr>
+     <td>1am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>2am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>3am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>4am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>5am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>6am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>7am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>8am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>9am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>10am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>11am</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>12pm</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>1pm</td>
+     <td></td>
+    </tr>
+   <tr>
+     <td>2pm</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>3pm</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>4pm</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>5pm</td>
+     <td></td>
+    </tr>
+   <tr>
+     <td>6pm</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>7pm</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>8pm</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>9pm</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>10pm</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td>11pm</td>
+     <td></td>
+   </tr>
+ </table>
+  </div>
+
+<!-- weekly view calendar -->
+<div id="weekly" style="text-align: center; display:none">
+  	<h1 id="currentWeek"></h1>
+  <table>
+    <tr>
+      <th></th>
+      <th>Sunday</th>
+      <th>Monday</th>
+      <th>Tuesday</th>
+      <th>Wednesday</th>
+      <th>Thursday</th>
+      <th>Friday</th>
+      <th>Saturday</th>
+    </tr>
+    <tr>
+      <td>12am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>1am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>2am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>3am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>4am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>5am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>6am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>7am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>8am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>9am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>10am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>11am</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>12pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>1pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>2pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>3pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>4pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>5pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>6pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>7pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>8pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>9pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>10pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>11pm</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+</div>
+	   
+	   
+<!-- monthly view calendar --> 
+<div id="monthly" style="text-align: center; display:none"></div>
+  <caption>
+    <button id="prev-btn" style="display: none;">Prev</button>
+    <span></span>
+    <button id="next-btn" style="display: none;">Next</button>
+  </caption>
+    <body>
+	<div id="calendar-container"></div>
+	<center>
+	   <table id="January">
+		   <caption style="font-weight: bold; font-size: larger;">January 2023</caption>
+            <thead>
+                <tr>
+                    <th colspan="7"></th>
+                </tr>
+                <tr>
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>10</td>
+                    <td>11</td>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>14</td>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>16</td>
+                    <td>17</td>
+                    <td>18</td>
+                    <td>19</td>
+                    <td>20</td>
+                    <td>21</td>
+                </tr>
+                <tr>
+                    <td>22</td>
+                    <td>23</td>
+                    <td>24</td>
+                    <td>25</td>
+                    <td>26</td>
+                    <td>27</td>
+                    <td>28</td>
+                </tr>
+                <tr>
+                    <td>29</td>
+                    <td>30</td>
+                    <td>31</td>
+                    <td class="grey"></td>
+                    <td class="grey"></td>
+                    <td class="grey"></td>
+                    <td class="grey"></td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <table id="February">
+		<caption style="font-weight: bold; font-size: larger;">February 2023</caption>
+		<thead>
+			<tr>
+				<th colspan="7"></th> 
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="grey"></td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+				<td>10</td>
+				<td>11</td>
+			</tr>
+			<tr>
+				<td>12</td>
+				<td>13</td>
+				<td>14</td>
+				<td>15</td>
+				<td>16</td>
+				<td>17</td>
+				<td>18</td>
+			</tr>
+			<tr>
+				<td>19</td>
+				<td>20</td>
+				<td>21</td>
+				<td>22</td>
+				<td>23</td>
+				<td>24</td>
+				<td>25</td>
+      </tr>
+			<tr>
+				<td>26</td>
+				<td>27</td>
+				<td>28</td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+                		<td class="grey"></td>
+			</tr>
+		</tbody>
+	</table>
+    
+    <table id="March">
+	    <caption style="font-weight: bold; font-size: larger;">March 2023</caption>
+	    <thead>
+			<tr>
+				<th colspan="7"></th> 
+		
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+				<td>10</td>
+				<td>11</td>
+			</tr>
+			<tr>
+				<td>12</td>
+				<td>13</td>
+				<td>14</td>
+				<td>15</td>
+				<td>16</td>
+				<td>17</td>
+				<td>18</td>
+			</tr>
+			<tr>
+				<td>19</td>
+				<td>20</td>
+				<td>21</td>
+				<td>22</td>
+				<td>23</td>
+				<td>24</td>
+				<td>25</td>
+      </tr>
+			<tr>
+				<td>26</td>
+				<td>27</td>
+				<td>28</td>
+				<td>29</td>
+				<td>30</td>
+				<td>31</td>
+				<td class="grey"></td>
+			</tr>
+		</tbody>
+	</table>
+    
+
+      <table id="April">
+	      <caption style="font-weight: bold; font-size: larger;">April 2023</caption>
+		<thead>
+			<tr>
+				<th colspan="7"></th> 
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+                		<td class="grey"></td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+			</tr>
+			<tr>
+				<td>9</td>
+				<td>10</td>
+				<td>11</td>
+				<td>12</td>
+				<td>13</td>
+				<td>14</td>
+				<td>15</td>
+			</tr>
+			<tr>
+				<td>16</td>
+				<td>17</td>
+				<td>18</td>
+				<td>19</td>
+				<td>20</td>
+				<td>21</td>
+				<td>22</td>
+      </tr>
+			<tr>
+				<td>23</td>
+				<td>24</td>
+				<td>25</td>
+				<td>26</td>
+				<td>27</td>
+				<td>28</td>
+				<td>29</td>
+			</tr>
+      <tr>
+				<td>30</td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+                		<td class="grey"></td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+			</tr>
+		</tbody>
+	</table>
+
+
+    <table id="May">
+	    <caption style="font-weight: bold; font-size: larger;">May 2023</caption>
+	    	<thead>
+			<tr>
+				<th colspan="7"></th> 
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="grey"></td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+			</tr>
+			<tr>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+				<td>10</td>
+				<td>11</td>
+				<td>12</td>
+				<td>13</td>
+			</tr>
+			<tr>
+				<td>14</td>
+				<td>15</td>
+				<td>16</td>
+				<td>17</td>
+				<td>18</td>
+				<td>19</td>
+				<td>20</td>
+			</tr>
+			<tr>
+				<td>21</td>
+				<td>22</td>
+				<td>23</td>
+				<td>24</td>
+				<td>25</td>
+				<td>26</td>
+				<td>27</td>
+      </tr>
+			<tr>
+				<td>28</td>
+				<td>29</td>
+				<td>30</td>
+				<td>31</td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+			</tr>
+		</tbody>
+	</table>
+
+
+    <table id="June">
+	    <caption style="font-weight: bold; font-size: larger;">June 2023</caption>
+		<thead>
+			<tr>
+				<th colspan="7"></th> 
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+                		<td class="grey"></td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+				<td>10</td>
+			</tr>
+			<tr>
+				<td>11</td>
+				<td>12</td>
+				<td>13</td>
+				<td>14</td>
+				<td>15</td>
+				<td>16</td>
+				<td>17</td>
+			</tr>
+			<tr>
+				<td>18</td>
+				<td>19</td>
+				<td>20</td>
+				<td>21</td>
+				<td>22</td>
+				<td>23</td>
+				<td>24</td>
+      </tr>
+			<tr>
+				<td>25</td>
+				<td>26</td>
+				<td>27</td>
+				<td>28</td>
+				<td>29</td>
+				<td>30</td>
+				<td class="grey"></td>
+			</tr>
+		</tbody>
+	</table>  
+
+
+      <table id="July">
+	      <caption style="font-weight: bold; font-size: larger;">July 2023</caption>
+		<thead>
+			<tr>
+				<th colspan="7"></th> 
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+                		<td class="grey"></td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+			</tr>
+			<tr>
+				<td>9</td>
+				<td>10</td>
+				<td>11</td>
+				<td>12</td>
+				<td>13</td>
+				<td>14</td>
+				<td>15</td>
+			</tr>
+			<tr>
+				<td>16</td>
+				<td>17</td>
+				<td>18</td>
+				<td>19</td>
+				<td>20</td>
+				<td>21</td>
+				<td>22</td>
+      </tr>
+			<tr>
+				<td>23</td>
+				<td>24</td>
+				<td>25</td>
+				<td>26</td>
+				<td>27</td>
+				<td>28</td>
+				<td>29</td>
+			</tr>
+      <tr>
+				<td>30</td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+                		<td class="grey"></td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+			</tr>
+		</tbody>
+	</table>
+
+
+        <table id="August">
+		<caption style="font-weight: bold; font-size: larger;">August 2023</caption>
+		<thead>
+			<tr>
+				<th colspan="7"></th> 
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="grey"></td>
+				<td class="grey"></td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+			</tr>
+			<tr>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+				<td>10</td>
+				<td>11</td>
+				<td>12</td>
+			</tr>
+			<tr>
+				<td>13</td>
+				<td>14</td>
+				<td>15</td>
+				<td>16</td>
+				<td>17</td>
+				<td>18</td>
+				<td>19</td>
+			</tr>
+			<tr>
+				<td>20</td>
+				<td>21</td>
+				<td>22</td>
+				<td>23</td>
+				<td>24</td>
+				<td>25</td>
+				<td>26</td>
+      </tr>
+			<tr>
+				<td>27</td>
+				<td>28</td>
+				<td>29</td>
+				<td>30</td>
+				<td>31</td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+			</tr>
+		</tbody>
+	</table>
+
+
+      <table id="September">
+	      <caption style="font-weight: bold; font-size: larger;">September 2023</caption>
+		<thead>
+			<tr>
+				<th colspan="7"></th> 
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="grey"></td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+                		<td class="grey"></td>
+				<td>1</td>
+				<td>2</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+			</tr>
+			<tr>
+				<td>10</td>
+				<td>11</td>
+				<td>12</td>
+				<td>13</td>
+				<td>14</td>
+				<td>15</td>
+				<td>16</td>
+      </tr>
+			<tr>
+				<td>17</td>
+				<td>18</td>
+				<td>19</td>
+				<td>20</td>
+				<td>21</td>
+				<td>22</td>
+				<td>23</td>
+      </tr>
+			<tr>
+				<td>24</td>
+				<td>25</td>
+				<td>26</td>
+				<td>27</td>
+				<td>28</td>
+				<td>29</td>
+				<td>30</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+    <table id="October">
+	    <caption style="font-weight: bold; font-size: larger;">October 2023</caption>
+		<thead>
+			<tr>
+				<th colspan="7"></th>
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>9</td>
+				<td>10</td>
+				<td>11</td>
+				<td>12</td>
+				<td>13</td>
+				<td>14</td>
+			</tr>
+			<tr>
+				<td>15</td>
+				<td>16</td>
+				<td>17</td>
+				<td>18</td>
+				<td>19</td>
+				<td>20</td>
+				<td>21</td>
+      </tr>
+			<tr>
+				<td>22</td>
+				<td>23</td>
+				<td>24</td>
+				<td>25</td>
+				<td>26</td>
+				<td>27</td>
+				<td>28</td>
+      </tr>
+			<tr>
+				<td>29</td>
+				<td>30</td>
+				<td>31</td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+                		<td class="grey"></td>
+			</tr>
+		</tbody>
+	</table>
+
+     <table id="November">
+	     <caption style="font-weight: bold; font-size: larger;">November 2023</caption>
+		<thead>
+			<tr>
+				<th colspan="7"></th> 
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+				<td>10</td>
+				<td>11</td>
+			</tr>
+			<tr>
+				<td>12</td>
+				<td>13</td>
+				<td>14</td>
+				<td>15</td>
+				<td>16</td>
+				<td>17</td>
+				<td>18</td>
+      </tr>
+			<tr>
+				<td>19</td>
+				<td>20</td>
+				<td>21</td>
+				<td>22</td>
+				<td>23</td>
+				<td>24</td>
+				<td>25</td>
+      </tr>
+			<tr>
+				<td>26</td>
+				<td>27</td>
+				<td>28</td>
+				<td>29</td>
+				<td>30</td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+			</tr>
+		</tbody>
+	</table> 
+
+      <table id="December">
+		<caption style="font-weight: bold; font-size: larger;">December 2023</caption>
+		<thead>
+			<tr>
+				<th colspan="7"></th> 
+			<tr>
+				<th>Sun</th>
+				<th>Mon</th>
+				<th>Tue</th>
+				<th>Wed</th>
+				<th>Thu</th>
+				<th>Fri</th>
+				<th>Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="grey"></td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+                		<td class="grey"></td>
+				<td>1</td>
+				<td>2</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+			</tr>
+			<tr>
+				<td>10</td>
+				<td>11</td>
+				<td>12</td>
+				<td>13</td>
+				<td>14</td>
+				<td>15</td>
+				<td>16</td>
+      </tr>
+			<tr>
+				<td>17</td>
+				<td>18</td>
+				<td>19</td>
+				<td>20</td>
+				<td>21</td>
+				<td>22</td>
+				<td>23</td>
+      </tr>
+			<tr>
+				<td>24</td>
+				<td>25</td>
+				<td>26</td>
+				<td>27</td>
+				<td>28</td>
+				<td>29</td>
+				<td>30</td>
+			</tr>
+      <tr>
+				<td>31</td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+                		<td class="grey"></td>
+                		<td class="grey"></td>
+				<td class="grey"></td>
+				<td class="grey"></td>
+			</tr>
+		</tbody>
+	</table>
+</center>
+	   </body>
+	  </div>
+<script>
+  let currentMonth = 0;
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const caption = document.querySelector('caption');
+
+  function updateCalendar() {
+    // hide all months except the current one
+    for (let i = 0; i < months.length; i++) {
+      const month = document.getElementById(months[i]);
+      if (currentMonth >= 0 && i === currentMonth) {
+        month.style.display = 'table';
+      } else {
+        month.style.display = 'none';
+      }
+    }
+
+    // show prev and next buttons if on monthly view
+    if (currentMonth >= 0) {
+      prevBtn.style.display = 'inline-block';
+      nextBtn.style.display = 'inline-block';
+    } else {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+    }
+
+    // update the caption to show the current month and year
+    const date = new Date();
+    date.setMonth(currentMonth);
+    caption.textContent = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+  }
+
+function showDaily() {
+  document.getElementById("weekly").style.display = "none";
+  document.getElementById("monthly").style.display = "none";
+  document.getElementById("daily").style.display = "block";
+  prevBtn.style.display = 'none';
+  nextBtn.style.display = 'none';
+  // explicitly hide the monthly view
+  document.getElementById("monthly").style.display = "none";
+for (let i = 0; i < months.length; i++) {
+    const month = document.getElementById(months[i]);
+    month.style.display = 'none';
+  }
+}
+
+function showWeekly() {
+  document.getElementById("daily").style.display = "none";
+  document.getElementById("monthly").style.display = "none";
+  document.getElementById("weekly").style.display = "block";
+  prevBtn.style.display = 'none';
+  nextBtn.style.display = 'none';
+  // explicitly hide the monthly view
+  document.getElementById("monthly").style.display = "none";
+for (let i = 0; i < months.length; i++) {
+    const month = document.getElementById(months[i]);
+    month.style.display = 'none';
+  }
+}
+
+function showMonthly() {
+  currentMonth = new Date().getMonth();
+  updateCalendar();
+  document.getElementById("daily").style.display = "none";
+  document.getElementById("weekly").style.display = "none";
+  document.getElementById("monthly").style.display = "block";
+}
+
+  // hide all months
+  for (let i = 0; i < months.length; i++) {
+    const month = document.getElementById(months[i]);
+    month.style.display = 'none';
+  }
+
+  prevBtn.addEventListener('click', () => {
+    currentMonth--;
+    if (currentMonth < 0) {
+      currentMonth = months.length - 1;
+    }
+    updateCalendar();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentMonth++;
+    if (currentMonth >= months.length) {
+      currentMonth = 0;
+    }
+    updateCalendar();
+  });
+
+      function setCurrentDate() {
+        // get current date
+        const today = new Date();
+        
+        // format date string
+        const options = { weekday: 'long', month: 'long', day: 'numeric' };
+        const dateString = today.toLocaleDateString('en-US', options);
+        
+        // set date header
+        const currentDateHeader = document.getElementById('currentDate');
+        currentDateHeader.textContent = dateString;
+      }
+      
+      function setCurrentWeek() {
+        // get current date
+        const today = new Date();
+        
+        // calculate Sunday of the current week
+        const sunday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
+        
+        // format date string for the current week
+        const options = { month: 'long', day: 'numeric' };
+        const sundayString = sunday.toLocaleDateString('en-US', options);
+        const saturday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (6 - today.getDay()));
+        const saturdayString = saturday.toLocaleDateString('en-US', options);
+        const currentWeekString = 'The Week of: ' + sundayString + ' - ' + saturdayString;
+        
+        // set current week header
+        const currentWeekHeader = document.getElementById('currentWeek');
+        currentWeekHeader.textContent = currentWeekString;
+      }
+
+  const todoList = document.getElementById('todo-list');
+const newItemInput = document.getElementById('new-item');
+const addButton = document.getElementById('add-button');
+
+// Function to handle checkbox click events
+function handleCheckboxClick(event) {
+  const checkbox = event.target;
+  if (checkbox.checked) {
+    const confirmation = confirm(`Confirm completion of ${checkbox.value}`);
+    if (confirmation) {
+      checkbox.parentNode.remove();
+    } else {
+      checkbox.checked = false;
+    }
+  }
+}
+
+// Add click listener to the add button
+addButton.addEventListener('click', function() {
+  // Create a new todo item
+  const newItem = document.createElement('li');
+  const newItemText = document.createTextNode(newItemInput.value);
+  newItem.appendChild(newItemText);
+  const newCheckbox = document.createElement('input');
+  newCheckbox.type = 'checkbox';
+  newCheckbox.name = 'todo-item';
+  newCheckbox.value = newItemInput.value;
+  newCheckbox.addEventListener('click', handleCheckboxClick);
+  newItem.insertBefore(newCheckbox, newItem.firstChild);
+  todoList.appendChild(newItem);
+  newItemInput.value = '';
+
+  // Attach event listener to the new checkbox
+  newCheckbox.addEventListener('click', handleCheckboxClick);
+});
+
+// Add event listeners to all checkboxes in the todo list
+const checkboxes = document.getElementsByName('todo-item');
+for (let i = 0; i < checkboxes.length; i++) {
+  checkboxes[i].addEventListener('click', handleCheckboxClick);
+}
+	  
+	  //script for classes selection
+function toggleClass(className) {
+  const classInfo = document.querySelector(`.${className}-info`);
+  const checkbox = document.getElementById(className);
+
+  if (checkbox.checked) {
+    classInfo.style.display = 'block';
+  } else {
+    classInfo.style.display = 'none';
+  }
+}
+
+function showDailyAndSetDate() {
+  showDaily();
+  setCurrentDate();
+}
+function showWeeklyAndSetDate() {
+  showWeekly();
+  setCurrentWeek();
+}
+</script>
+</body>
 </html>

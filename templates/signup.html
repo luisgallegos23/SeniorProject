@@ -3,13 +3,16 @@
     <head>
         <title> Sign Up</title>
         <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+        <link rel = "icon" type = "image/png" href = "{{ url_for('static',filename='favicon.png') }}">
+        <!-- For apple devices -->
+        <link rel = "apple-touch-icon" type = "image/png" href = "{{ url_for('static',filename='favicon.png') }}"/>
     </head>
 
     {% if step=="signup" %}
     <form class="form_container" action="{{ url_for('signup') }}" method= post>
         <div class="logo_container">
             <img src="/static/syllylogo.png" alt="Italian Trulli" class="logo">
-        </div> <!-- Add logo picture-->
+        </div> 
         <div class="title_container">
         <p class="title">SYLLY CALENDAR</p>
         <span class="subtitle">Sign Up: </span>

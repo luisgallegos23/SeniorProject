@@ -25,8 +25,7 @@ def signin():
         if(DBhandle.checkUser(request.form["email"],request.form["password"]) == True):
             email = request.form["email"]
             session["email"] = email
-            data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
-            return render_template("uploadevents.html", data = json.dumps(data))
+            return render_template("home.html")
         else:
              return render_template("signin.html", step = "signin", visibility="block" )
 
@@ -43,6 +42,10 @@ def signup():
             CalHandle.authToken(request.form["email"])
             return render_template('signin.html', step="signin", visibility="none")
 
+@app.route("/uploadevents", methods=['get', 'post'])
+def uploadevents():
+    data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
+    return render_template("uploadevents.html", data = json.dumps(data))
     
 @app.teardown_appcontext
 def close_db(e=None):

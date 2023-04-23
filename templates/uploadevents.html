@@ -3,9 +3,13 @@
     <head>
         <title>Upload Event</title>
         <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+        <link rel = "icon" type = "image/png" href = "{{ url_for('static',filename='favicon.png') }}">
+         <!--For apple devices -->
+        <link rel = "apple-touch-icon" type = "image/png" href = "{{ url_for('static',filename='favicon.png') }}"/>
         <script> 
             var val = 0;
 
+            /* Creates the individual forms of each event based on the data extraction from PDF for use.*/
             function buildForm(){
                 var e = document.getElementById('data').value;
                 var data = JSON.parse(e);
@@ -13,84 +17,90 @@
                     val++;
                     var element = (
                         `<div id="div${val}">
-                            <div id="position${val}"></div>
                             <p class="eventheader"> Event: ${val}</p>
                             <label for="event-title">Event Title:</label>
-                            <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="${event.summary}">
+                            <input type="text" class="ininfo" name="event-title${val}" value="${event.summary}">
 
                             <label for="start-date">Start Date:</label>
-                            <input type="date" class="ininfo" id="start-date${val}" name="start-date" value="${event.start.date}">
+                            <input type="date" class="ininfo" name="start-date${val}" value="${event.start.date}">
 
                             <label for="start-time">Start Time:</label>
-                            <input type="time" class="ininfo" id="start-time${val}" name="start-time" value="">
+                            <input type="time" class="ininfo" name="start-time${val}" value="12:00">
 
                             <label for="end-date">End Date:</label>
-                            <input type="date" class="ininfo" id="end-date${val}" name="end-date" value="${event.end.date}">
+                            <input type="date" class="ininfo" name="end-date${val}" value="${event.end.date}">
 
                             <label for="end-time">End Time:</label>
-                            <input type="time" class="ininfo" id="end-time${val}" name="end-time" value="">
+                            <input type="time" class="ininfo" name="end-time${val}" value="12:00">
 
                             <label for="description">Notes/Description:</label>
-                            <textarea id="description${val}" name="description" value=""></textarea>
+                            <textarea name="description${val}" value=""></textarea>
                             <hr class="sep">
                         </div>`
                     );
                     document.getElementById('container').innerHTML += element;
                     });
-                    document.getElementById('container').innerHTML += `<p id="remove" class="remove" onclick="removeDiv('div${val}')">Remove Event</p>`;
-                    }
+                document.getElementById('container').innerHTML += `<div id="remove" class="remove" onclick="removeDiv('div${val}')">Remove Event</div>`;
+                document.getElementById('numelements').value = val;    
+            }
 
+            /* Allows user to remove an element. Updates the number of elements for uese in Extraction */
             function removeDiv(id) {
                 var element = document.getElementById(id);
                 element.remove();
                 element = document.getElementById('remove');
                 element.remove();
                 val-=1;
-                document.getElementById('container').innerHTML += `<p id="remove" class="remove" onclick="removeDiv('div${val}')">Remove Event</p>`;
+                document.getElementById('container').innerHTML += `<div id="remove" class="remove" onclick="removeDiv('div${val}')">Remove Event</div>`;
+                document.getElementById('numelements').value = val;
             }
 
+            /* Adds a new form to the page.
+            IDS are based on the element number to use in Python extraction  */
             function addForm(){
                 val++;
                 var element = (
                     `<div id="div${val}">
-                        <div id="position${val}"></div>
                         <p class="eventheader"> Event: ${val}</p>
-                        <label for="event-title">Event Title:</label>
-                        <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="">
+                            <label for="event-title">Event Title:</label>
+                            <input type="text" class="ininfo" name="event-title${val}" placeholder="Event">
 
-                        <label for="start-date">Start Date:</label>
-                        <input type="date" class="ininfo" id="start-date${val}" name="start-date" value="">
+                            <label for="start-date">Start Date:</label>
+                            <input type="date" class="ininfo" name="start-date${val}" placeholder="12/12/2023">
 
-                        <label for="start-time">Start Time:</label>
-                        <input type="time" class="ininfo" id="start-time${val}" name="start-time" value="">
+                            <label for="start-time">Start Time:</label>
+                            <input type="time" class="ininfo" name="start-time${val}" placeholder="12:00">
 
-                        <label for="end-date">End Date:</label>
-                        <input type="date" class="ininfo" id="end-date${val}" name="end-date" value="">
+                            <label for="end-date">End Date:</label>
+                            <input type="date" class="ininfo" name="end-date${val}" placeholder="12/13/2023">
 
-                        <label for="end-time">End Time:</label>
-                        <input type="time" class="ininfo" id="end-time${val}" name="end-time" value="">
+                            <label for="end-time">End Time:</label>
+                            <input type="time" class="ininfo" name="end-time${val}" placeholder="12:00">
 
-                        <label for="description">Notes/Description:</label>
-                        <textarea id="description${val}" name="description" value=""></textarea>
-                        <hr class="sep">
+                            <label for="description">Notes/Description:</label>
+                            <textarea name="description${val}" placeholder="Type Here"></textarea>
+                            <hr class="sep">
                     </div>`
-                )
+                );
                 document.getElementById('container').innerHTML += element;
                 var key = document.getElementById('remove');
                 key.remove();
-                document.getElementById('container').innerHTML += `<p id="remove" class="remove" onclick="removeDiv('div${val}')">Remove Event</p>`;
+                document.getElementById('container').innerHTML += `<div id="remove" class="remove" onclick="removeDiv('div${val}')"> Remove Event</div>`;
+                document.getElementById('numelements').value = val;
             }
-
         </script>
     </head>
 <body>
-
+    <h1 id="title_name">SYLLY CALENDAR</h1>
     <form id = "config" class="form" onload="buildForm()">
         <input id="data" type="hidden" name="data" value="{{data}}">
+        <input type="hidden" id="numelements" name="numelements" value="">
         <div id='container'>
             <script>buildForm()</script>
-        </div>  
-        <div class="addevent" onclick="addForm()"></div>
+            <!-- Adds the individual forms of Events HERE -->
+        </div>
+        <div id="addevent" class="addevent" onclick="addForm()"> Add Event</div>
+        <br>
         <input type="submit" value="Create">
     </form>
 </body>
