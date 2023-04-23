@@ -4,51 +4,56 @@
         <title>Upload Event</title>
         <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
         <script> 
-            var val = 1;
+            var val = 0;
 
             function buildForm(){
                 var e = document.getElementById('data').value;
                 var data = JSON.parse(e);
-                val = 1;
                 data.forEach(event => {
-                var element = (
-                    `<div id="div${val}">
-                        <div class="remove" onclick="removeDiv('div${val}')"></div>
-                        <p class="eventheader"> Event: ${val}</p>
-                        <label for="event-title">Event Title:</label>
-                        <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="${event.summary}">
+                    val++;
+                    var element = (
+                        `<div id="div${val}">
+                            <div id="position${val}"></div>
+                            <p class="eventheader"> Event: ${val}</p>
+                            <label for="event-title">Event Title:</label>
+                            <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="${event.summary}">
 
-                        <label for="start-date">Start Date:</label>
-                        <input type="date" class="ininfo" id="start-date${val}" name="start-date" value="${event.start.date}">
+                            <label for="start-date">Start Date:</label>
+                            <input type="date" class="ininfo" id="start-date${val}" name="start-date" value="${event.start.date}">
 
-                        <label for="start-time">Start Time:</label>
-                        <input type="time" class="ininfo" id="start-time${val}" name="start-time" value="">
+                            <label for="start-time">Start Time:</label>
+                            <input type="time" class="ininfo" id="start-time${val}" name="start-time" value="">
 
-                        <label for="end-date">End Date:</label>
-                        <input type="date" class="ininfo" id="end-date${val}" name="end-date" value="${event.end.date}">
+                            <label for="end-date">End Date:</label>
+                            <input type="date" class="ininfo" id="end-date${val}" name="end-date" value="${event.end.date}">
 
-                        <label for="end-time">End Time:</label>
-                        <input type="time" class="ininfo" id="end-time${val}" name="end-time" value="">
+                            <label for="end-time">End Time:</label>
+                            <input type="time" class="ininfo" id="end-time${val}" name="end-time" value="">
 
-                        <label for="description">Notes/Description:</label>
-                        <textarea id="description${val}" name="description" value=""></textarea>
-                        <hr class="sep">
-                    </div>`
-                );
-                document.getElementById('container').innerHTML += element;
-                val++;
-                });
-                }
+                            <label for="description">Notes/Description:</label>
+                            <textarea id="description${val}" name="description" value=""></textarea>
+                            <hr class="sep">
+                        </div>`
+                    );
+                    document.getElementById('container').innerHTML += element;
+                    });
+                    document.getElementById('container').innerHTML += `<p id="remove" class="remove" onclick="removeDiv('div${val}')">Remove Event</p>`;
+                    }
 
-                function removeDiv(id) {
-                    var element = document.getElementById(id);
-                    element.remove();
-                }
+            function removeDiv(id) {
+                var element = document.getElementById(id);
+                element.remove();
+                element = document.getElementById('remove');
+                element.remove();
+                val-=1;
+                document.getElementById('container').innerHTML += `<p id="remove" class="remove" onclick="removeDiv('div${val}')">Remove Event</p>`;
+            }
 
             function addForm(){
+                val++;
                 var element = (
-                    `<div>
-                        <div class="remove" onclick="removeDiv('div${val}')"></div>
+                    `<div id="div${val}">
+                        <div id="position${val}"></div>
                         <p class="eventheader"> Event: ${val}</p>
                         <label for="event-title">Event Title:</label>
                         <input type="text" class="ininfo" id="event-title${val}" name="event-title" value="">
@@ -71,7 +76,9 @@
                     </div>`
                 )
                 document.getElementById('container').innerHTML += element;
-                val++;
+                var key = document.getElementById('remove');
+                key.remove();
+                document.getElementById('container').innerHTML += `<p id="remove" class="remove" onclick="removeDiv('div${val}')">Remove Event</p>`;
             }
 
         </script>
