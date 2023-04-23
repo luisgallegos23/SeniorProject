@@ -41,12 +41,29 @@ def signup():
             DBhandle.addUser(request.form["email"], request.form["password"], request.form["fname"], request.form["lname"])
             CalHandle.authToken(request.form["email"])
             return render_template('signin.html', step="signin", visibility="none")
+        
 
 @app.route("/uploadevents", methods=['get', 'post'])
 def uploadevents():
-    data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
-    return render_template("uploadevents.html", data = json.dumps(data))
+    if "step" not in request.form:
+        data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
+        return render_template("uploadevents.html", data = json.dumps(data))
+    elif request.form["step"] == "create":
+        num = int(request.form["numelements"])
+        print(num)
+        for y in range(1, num+1):
+            x = str(y)
+            title = request.form["event-title"+x]
+            startdate = request.form["start-date"+x]
+            starttime = request.form["start-time"+x]
+            enddate = request.form["end-date"+x]
+            endtime = request.form["end-time"+x]
+            des = request.form["description"+x]
+            print(title + " "+startdate + " "+starttime + " "+enddate + " "+endtime + " "+des+"\n")
+        return 'executed';
+
     
+
 @app.teardown_appcontext
 def close_db(e=None):
     """If this request connected to the database, close the
@@ -71,4 +88,4 @@ def debug(s):
 #####################################################
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080, debug=True)  # can turn off debugging with False
+    app.run(host='0.0.0.0', port=8080, debug=False)  # can turn off debugging with False

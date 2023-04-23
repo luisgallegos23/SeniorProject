@@ -92,7 +92,7 @@
     </head>
 <body>
     <h1 id="title_name">SYLLY CALENDAR</h1>
-    <form id = "config" class="form" onload="buildForm()">
+    <form id = "config" class="form" action="{{ url_for('uploadevents') }}" method="post">
         <input id="data" type="hidden" name="data" value="{{data}}">
         <input type="hidden" id="numelements" name="numelements" value="">
         <div id='container'>
@@ -101,6 +101,7 @@
         </div>
         <div id="addevent" class="addevent" onclick="addForm()"> Add Event</div>
         <br>
+        <input type="hidden" name="step" value="create">
         <input type="submit" value="Create">
     </form>
 </body>
