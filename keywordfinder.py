@@ -1,5 +1,4 @@
 from pypdf import PdfReader
-import PyPDF2
 import re 
 from datetime import datetime
 
@@ -79,6 +78,7 @@ def main():
     onlyevent = ""
     currevent = ["", ""]
     Newevent = ["", ""]
+    events = []
     
 
     for i in range(number_of_pages):
@@ -96,7 +96,10 @@ def main():
             firstline = False
             for y in myset: 
                 if len(re.findall(y,x)) != 0:
-                    print(Newevent)
+                    if Newevent == None or Newevent == ["", ""]:
+                            print("")
+                    else:
+                        events.append(Newevent)
                     currevent = ["", ""]              
                     alldates.append(re.findall(y,x)[0])
                     onlyevent = x
@@ -113,8 +116,10 @@ def main():
                     Newevent[1] += x
                      
 
-    print(Newevent)            
-                    
+    events.append(Newevent)
+    for i in events:
+        print(i)
+    return events
             
 
     #print(alldates)
