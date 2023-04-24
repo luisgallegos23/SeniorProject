@@ -1,6 +1,6 @@
 import unittest
-import DBhandle
-import CalHandle
+from src import DBhandle
+from src import CalHandle
 
 ## Clear Database before testing
 ## Comment out line in DBhandle.py marked w/ "Mark for test"
