@@ -115,8 +115,8 @@ def generateevents(pdf):
                      
 
     events.append(Newevent)
-    for i in events:
-        print(i)
+    #for i in events:
+    #    print(i)
     return events
             
 
