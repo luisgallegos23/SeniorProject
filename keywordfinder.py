@@ -88,6 +88,7 @@ def generateevents(pdf):
 
         pattern = r'\d+ \d+'
         text = re.sub(pattern, lambda match: match.group().replace(' ', ''), text)
+        text = re.sub(",", "", text)
         text_split = text.splitlines()
         #print(text)
         
