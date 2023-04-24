@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+    #Home {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+    }
+    </style>
+
+    <center>
+    <title>My Profile - SyllyCalendar</title>
+      <center>
+  </head>
+  <body>
+        <!-- back-to-home button -->
+    <a href="index.html"><button class="button" id="Home">Home</button></a>
+    <center>
+    <h1>My Profile</h1>
+    <form action="changepassword.php" method="post">
+      <label for="current-password">Current Password:</label>
+      <input type="password" id="current-password" name="current-password" required>
+      <br>
+      <label for="new-password">New Password:</label>
+      <input type="password" id="new-password" name="new-password" required>
+      <br>
+      <label for="confirm-new-password">Confirm New Password:</label>
+      <input type="password" id="confirm-new-password" name="confirm-new-password" required>
+      <br>
+      <input type="submit" value="Change Password">
+    </form>
+    <br>
+    <form action="logout.php" method="post">
+      <input type="submit" value="Log Out">
+    </form>
+      <center>
+  </body>
+</html>
