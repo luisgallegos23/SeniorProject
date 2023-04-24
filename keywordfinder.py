@@ -1,6 +1,6 @@
 from pypdf import PdfReader
 import re 
-from datetime import datetime
+#from datetime import datetime
 
 
 date_pattern = "\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?"
@@ -96,10 +96,8 @@ def main():
             firstline = False
             for y in myset: 
                 if len(re.findall(y,x)) != 0:
-                    if Newevent == None or Newevent == ["", ""]:
-                            print("")
-                    else:
-                        events.append(Newevent)
+                    if Newevent != None and Newevent != ["", ""]:
+                            events.append(Newevent)
                     currevent = ["", ""]              
                     alldates.append(re.findall(y,x)[0])
                     onlyevent = x
