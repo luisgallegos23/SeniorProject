@@ -1,53 +1,73 @@
 # Blog Flask application
-import os
 from flask import Flask, render_template
 import psycopg2
 import psycopg2.extras
-from flask import Flask, request, render_template, g, current_app, session
+from flask import Flask, request, render_template, g, flash, session, redirect, url_for
 from flask.cli import with_appcontext
 import os
 from src import CalHandle
 from src import DBhandle
+from werkzeug.utils import secure_filename
 import json
+import os
 
 
 app = Flask(__name__)
 app.secret_key = "SyllyCalendar2023"
+UPLOAD_FOLDER ='/uploads' #path for uploaded folders
+ALLOWED_EXTENSIONS = {'pdf','txt'}  #allowed extensions -> can be added to 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ####################################################
 # Routes
 
-
+#Allows the user to singin with the Required Credentials (Email and Password)
+#Returns an error message if the information is wrong
+#If credentials match user data in the Database allows user to move to next page
 @app.route("/", methods= ['get','post'])
 def signin():
     if "step" not in request.form:     
         return render_template('signin.html', step="signin", visibility="none" )
+    
     elif request.form["step"] == "auth":
         if(DBhandle.checkUser(request.form["email"],request.form["password"]) == True):
             email = request.form["email"]
             session["email"] = email
+            #TODO: when return the template add other paramater for data to create calendar
             return render_template("home.html")
+        
         else:
              return render_template("signin.html", step = "signin", visibility="block" )
 
 
+#Allows user to sign up to use our service
+#creaets credentials and other information
+#REQUIRED: User needs to have a Google account 
 @app.route("/signup", methods=['get','post'])
 def signup():
     if "step" not in request.form:     
         return render_template('signup.html', step="signup", visibility="none")
+    
     elif request.form["step"] == "createuser":
         if(DBhandle.checkUserExist(request.form["email"]) == True):
             return render_template("signup.html", step = "signup", visibility="block")
+        
         else:
             DBhandle.addUser(request.form["email"], request.form["password"], request.form["fname"], request.form["lname"])
+            #Redirects user to Google for conformation to use our service 
             CalHandle.authToken(request.form["email"])
             return render_template('signin.html', step="signin", visibility="none")
-        
 
+
+#Allows users to authenticate the new events that will be created 
+#Creates the events from the PDF that is read
 @app.route("/uploadevents", methods=['get', 'post'])
 def uploadevents():
     if "step" not in request.form:
+        #TODO: Change data to match the information from PDF-> Next line is only for test 
         data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
         return render_template("uploadevents.html", data = json.dumps(data))
+    
+    #After sumbit will create the Events 
     elif request.form["step"] == "create":
         num = int(request.form["numelements"])
         print(num)
@@ -60,9 +80,34 @@ def uploadevents():
             endtime = request.form["end-time"+x]
             des = request.form["description"+x]
             print(title + " "+startdate + " "+starttime + " "+enddate + " "+endtime + " "+des+"\n")
-        return 'executed';
+        return 'executed'; #TODO: return a template that informs the user of creation
 
-    
+#TODO: CODE below is used for file upload 
+#Makes sure the file being submited is a correct TYPE
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+#Allows for the upload of a document to the server
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('download_file', name=filename))
+    return 'hello'
+
 
 @app.teardown_appcontext
 def close_db(e=None):
