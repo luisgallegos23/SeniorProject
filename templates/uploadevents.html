@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Upload Event</title>
+        <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+        <link rel = "icon" type = "image/png" href = "{{ url_for('static',filename='favicon.png') }}">
+         <!--For apple devices -->
+        <link rel = "apple-touch-icon" type = "image/png" href = "{{ url_for('static',filename='favicon.png') }}"/>
+        <script> 
+            var val = 0;
+
+            /* Creates the individual forms of each event based on the data extraction from PDF for use.*/
+            function buildForm(){
+                var e = document.getElementById('data').value;
+                var data = JSON.parse(e);
+                data.forEach(event => {
+                    val++;
+                    var element = (
+                        `<div id="div${val}">
+                            <p class="eventheader"> Event: ${val}</p>
+                            <label for="event-title">Event Title:</label>
+                            <input type="text" class="ininfo" name="event-title${val}" value="${event.summary}">
+
+                            <label for="start-date">Start Date:</label>
+                            <input type="date" class="ininfo" name="start-date${val}" value="${event.start.date}">
+
+                            <label for="start-time">Start Time:</label>
+                            <input type="time" class="ininfo" name="start-time${val}" value="12:00">
+
+                            <label for="end-date">End Date:</label>
+                            <input type="date" class="ininfo" name="end-date${val}" value="${event.end.date}">
+
+                            <label for="end-time">End Time:</label>
+                            <input type="time" class="ininfo" name="end-time${val}" value="12:00">
+
+                            <label for="description">Notes/Description:</label>
+                            <textarea name="description${val}" value=""></textarea>
+                            <hr class="sep">
+                        </div>`
+                    );
+                    document.getElementById('container').innerHTML += element;
+                    });
+                document.getElementById('container').innerHTML += `<div id="remove" class="remove" onclick="removeDiv('div${val}')">Remove Event</div>`;
+                document.getElementById('numelements').value = val;    
+            }
+
+            /* Allows user to remove an element. Updates the number of elements for uese in Extraction */
+            function removeDiv(id) {
+                var element = document.getElementById(id);
+                element.remove();
+                element = document.getElementById('remove');
+                element.remove();
+                val-=1;
+                document.getElementById('container').innerHTML += `<div id="remove" class="remove" onclick="removeDiv('div${val}')">Remove Event</div>`;
+                document.getElementById('numelements').value = val;
+            }
+
+            /* Adds a new form to the page.
+            IDS are based on the element number to use in Python extraction  */
+            function addForm(){
+                val++;
+                var element = (
+                    `<div id="div${val}">
+                        <p class="eventheader"> Event: ${val}</p>
+                            <label for="event-title">Event Title:</label>
+                            <input type="text" class="ininfo" name="event-title${val}" placeholder="Event">
+
+                            <label for="start-date">Start Date:</label>
+                            <input type="date" class="ininfo" name="start-date${val}" placeholder="12/12/2023">
+
+                            <label for="start-time">Start Time:</label>
+                            <input type="time" class="ininfo" name="start-time${val}" placeholder="12:00">
+
+                            <label for="end-date">End Date:</label>
+                            <input type="date" class="ininfo" name="end-date${val}" placeholder="12/13/2023">
+
+                            <label for="end-time">End Time:</label>
+                            <input type="time" class="ininfo" name="end-time${val}" placeholder="12:00">
+
+                            <label for="description">Notes/Description:</label>
+                            <textarea name="description${val}" placeholder="Type Here"></textarea>
+                            <hr class="sep">
+                    </div>`
+                );
+                document.getElementById('container').innerHTML += element;
+                var key = document.getElementById('remove');
+                key.remove();
+                document.getElementById('container').innerHTML += `<div id="remove" class="remove" onclick="removeDiv('div${val}')"> Remove Event</div>`;
+                document.getElementById('numelements').value = val;
+            }
+        </script>
+    </head>
+<body>
+    <h1 id="title_name">SYLLY CALENDAR</h1>
+    <form id = "config" class="form" action="{{ url_for('uploadevents') }}" method="post">
+        <input id="data" type="hidden" name="data" value="{{data}}">
+        <input type="hidden" id="numelements" name="numelements" value="">
+        <div id='container'>
+            <script>buildForm()</script>
+            <!-- Adds the individual forms of Events HERE -->
+        </div>
+        <div id="addevent" class="addevent" onclick="addForm()"> Add Event</div>
+        <br>
+        <input type="hidden" name="step" value="create">
+        <input type="submit" value="Create">
+    </form>
+</body>
+</html>

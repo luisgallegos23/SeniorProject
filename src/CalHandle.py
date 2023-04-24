@@ -75,11 +75,11 @@ def getCal(email, calname):
 Creates a new event in the users calendar
 Takes paramters: Users email, calendar name, event name, start date of event, and end date of event
 """
-def createEvent(email, calname, eventname, start_date, end_date):#
+def createEvent(email, calname, eventname, start_date, end_date, des):#
     try:
         service = buildService(email)
         calendar = getCal(email, calname) 
-        EVENT = formatEvent(eventname, start_date, end_date)
+        EVENT = formatEvent(eventname, start_date, end_date, des)
         EVENT = service.events().insert(calendarId=calendar['id'], body=EVENT).execute() 
 
     except HttpError as error:
@@ -90,10 +90,11 @@ Sets the meta data to a JSON payload
 Returns the payload to be used
 Some metadata is automatically set, parameter values used user input
 """
-def formatEvent(name, start_date, end_date): #TODO: add notes
+def formatEvent(name, start_date, end_date, des): #TODO: add notes
     #Current events will be ver low level just  take requirements 
     EVENT = {
     'summary': name,
+    'description': des,
     'start': {
         'dateTime': start_date,
         'timeZone': 'America/Chicago',

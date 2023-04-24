@@ -5,11 +5,10 @@ import psycopg2
 import psycopg2.extras
 from flask import Flask, request, render_template, g, current_app, session
 from flask.cli import with_appcontext
-import click
-import sys
 import os
 from src import CalHandle
 from src import DBhandle
+import json
 
 
 app = Flask(__name__)
@@ -26,8 +25,7 @@ def signin():
         if(DBhandle.checkUser(request.form["email"],request.form["password"]) == True):
             email = request.form["email"]
             session["email"] = email
-            data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
-            return render_template("home.html", step = "true", data = data)
+            return render_template("home.html")
         else:
              return render_template("signin.html", step = "signin", visibility="block" )
 
@@ -43,8 +41,29 @@ def signup():
             DBhandle.addUser(request.form["email"], request.form["password"], request.form["fname"], request.form["lname"])
             CalHandle.authToken(request.form["email"])
             return render_template('signin.html', step="signin", visibility="none")
+        
+
+@app.route("/uploadevents", methods=['get', 'post'])
+def uploadevents():
+    if "step" not in request.form:
+        data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
+        return render_template("uploadevents.html", data = json.dumps(data))
+    elif request.form["step"] == "create":
+        num = int(request.form["numelements"])
+        print(num)
+        for y in range(1, num+1):
+            x = str(y)
+            title = request.form["event-title"+x]
+            startdate = request.form["start-date"+x]
+            starttime = request.form["start-time"+x]
+            enddate = request.form["end-date"+x]
+            endtime = request.form["end-time"+x]
+            des = request.form["description"+x]
+            print(title + " "+startdate + " "+starttime + " "+enddate + " "+endtime + " "+des+"\n")
+        return 'executed';
 
     
+
 @app.teardown_appcontext
 def close_db(e=None):
     """If this request connected to the database, close the

@@ -98,7 +98,9 @@ def getCalendar(email, name):
     except(Exception, psycopg2.Error) as error:
         print("Error fetching data from PostgresSQL database", error)
 
-
+"""
+Authenticates that there has not been another calendar with the same name
+"""
 def existCal(email, calname):
     try:
         conn = get_db()
@@ -111,6 +113,21 @@ def existCal(email, calname):
 
     except(Exception, psycopg2.Error) as error:
         print("Error checking Calendar existence in PostgresSQL database", error)
+
+"""
+returns all the calendars the user has created from the Database 
+Takes the users email associated with the calendars
+"""
+def getCalendars(email):
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT calID, calname FROM calendars WHERE email=%s", [email])
+        data = cursor.fetchall();
+        return data
+    
+    except(Exception, psycopg2.Error) as error:
+        print("Error fetching data from PostgresSQL database", error)
 
 """
 Fetches ALL the calendars of the current User
