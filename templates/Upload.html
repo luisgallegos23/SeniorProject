@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Example Documents</title>
+	<style>
+		/* Center the "Create a Class" button */
+		#create-class {
+			display: block;
+			margin: 20px auto;
+			padding: 10px 20px;
+			background-color: #4CAF50;
+			color: white;
+			font-size: 16px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+		#create-class:hover {
+			background-color: #3e8e41;
+		}
+
+		/* Style for document container */
+		.document-container {
+			display: flex;
+			flex-wrap: nowrap;
+			justify-content: space-between;
+			margin: 20px;
+			overflow-x: scroll;
+			white-space: nowrap;
+		}
+
+		/* Style for document box */
+		.document-box {
+			width: calc(33.33% - 10px);
+			margin-right: 10px;
+			margin-bottom: 20px;
+		}
+
+		/* Style for document image */
+		.document-image {
+			width: 100%;
+			height: auto;
+		}
+
+		/* Style for document description */
+		.document-description {
+			margin-top: 10px;
+			font-size: 14px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="document-container">
+		<div class="document-box">
+        		<iframe src="Example1.pdf" width="100%" height="400px"></iframe>
+        		<div class="document-description">This pdf is ideal because it has the date and assigment on one line</div>
+    		</div>
+		<div class="document-box">
+        		<iframe src="Example2.pdf" width="100%" height="400px"></iframe>
+        		<div class="document-description">This pdf is ideal because it has the date clearly seperated and assigment under it</div>
+    		</div>
+		<div class="document-box">
+        		<iframe src="Example3.pdf" width="100%" height="400px"></iframe>
+        		<div class="document-description">This pdf is ideal because it has the date and assigment on one line</div>
+    		</div>
+	</div>
+	<text>
+	    <center>
+	    Disclaimer: Check all assigments and confirm the dates are correct after uploading your documentation. 
+	    There is a potentional for errors and if any are found, can be corrected by editing the event.
+	    </center>
+	</text>
+	<button id="create-class" onclick="window.location.href='UploadForm.html'">Create a Class</button>
+</body>
+</html>
