@@ -70,9 +70,9 @@ def test(alldates):
     return 0
             
 
-def main():
+def generateevents(pdf):
     alldates = []
-    reader = PdfReader("270.pdf")
+    reader = PdfReader(pdf)
     number_of_pages = len(reader.pages)
     Haveevent = False
     onlyevent = ""
@@ -122,8 +122,6 @@ def main():
 
     #print(alldates)
 
-    
 
-main()
 #testre()
 
