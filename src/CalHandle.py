@@ -9,14 +9,13 @@ from src import DBhandle
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
 def authToken(email):
-    
-    creds = None
+     creds = None
 
-    if DBhandle.existCreds(email) == True:
+     if DBhandle.existCreds(email) == True:
         creds = Credentials.from_authorized_user_info(DBhandle.getCreds(email), SCOPES)
     
     # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
+     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
@@ -28,7 +27,7 @@ def authToken(email):
         # Save the credentials for the next run
         #with DBHandle.addcreds() to database:
 
-    return creds 
+     return creds 
 
 """
 Checks the the users current credentials are valid
@@ -79,6 +78,7 @@ def createEvent(email, calname, eventname, start_date, end_date, des):#
     try:
         service = buildService(email)
         calendar = getCal(email, calname) 
+        print(calendar['id'])
         EVENT = formatEvent(eventname, start_date, end_date, des)
         EVENT = service.events().insert(calendarId=calendar['id'], body=EVENT).execute() 
 
@@ -91,7 +91,7 @@ Returns the payload to be used
 Some metadata is automatically set, parameter values used user input
 """
 def formatEvent(name, start_date, end_date, des): #TODO: add notes
-    #Current events will be ver low level just  take requirements 
+    #Current events will be very low level just  take requirements 
     EVENT = {
     'summary': name,
     'description': des,
@@ -104,7 +104,7 @@ def formatEvent(name, start_date, end_date, des): #TODO: add notes
         'timeZone': 'America/Chicago',
     },
     }
-    
+    print(EVENT)
     return EVENT
 
 
@@ -128,18 +128,15 @@ def getEvents(calendarID, email):#
             print('No upcoming events found.')
             return
 
-        # Prints the start and name of the next 10 events
-        #for event in events:
-            #start = event['start'].get('dateTime', event['start'].get('date'))
-            #print(start, event['summary'])
-
         return events    
 
     except HttpError as error:
         print('An error occurred: %s' % error)
 
     
-
+def formateTimeStap(date, time):
+    time=date+"T"+time+":00-07:00" #Format can be changed to meet time stamps
+    return time
 
 def removeEvent(email,eventid, calendar): #TODO: Test 
     try:

@@ -1,7 +1,6 @@
 from pypdf import PdfReader
-import PyPDF2
 import re 
-from datetime import datetime
+#from datetime import datetime
 
 
 date_pattern = "\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?"
@@ -71,14 +70,15 @@ def test(alldates):
     return 0
             
 
-def main():
+def generateevents(pdf):
     alldates = []
-    reader = PdfReader("270.pdf")
+    reader = PdfReader(pdf)
     number_of_pages = len(reader.pages)
     Haveevent = False
     onlyevent = ""
     currevent = ["", ""]
     Newevent = ["", ""]
+    events = []
     
 
     for i in range(number_of_pages):
@@ -88,6 +88,7 @@ def main():
 
         pattern = r'\d+ \d+'
         text = re.sub(pattern, lambda match: match.group().replace(' ', ''), text)
+        text = re.sub(",", "", text)
         text_split = text.splitlines()
         #print(text)
         
@@ -96,7 +97,8 @@ def main():
             firstline = False
             for y in myset: 
                 if len(re.findall(y,x)) != 0:
-                    print(Newevent)
+                    if Newevent != None and Newevent != ["", ""]:
+                            events.append(Newevent)
                     currevent = ["", ""]              
                     alldates.append(re.findall(y,x)[0])
                     onlyevent = x
@@ -113,14 +115,13 @@ def main():
                     Newevent[1] += x
                      
 
-    print(Newevent)            
-                    
+    events.append(Newevent)
+    #for i in events:
+    #    print(i)
+    return events
             
 
     #print(alldates)
 
-    
 
-main()
 #testre()
-

@@ -30,7 +30,6 @@ def checkUser(email, key):
         cursor = conn.cursor()
         cursor.execute("SELECT count(*) FROM users WHERE email=%s AND password=%s", [email, key]) 
         count=cursor.fetchone()[0]
-        print(count)
         if(count == 1):
             return True
         return False
@@ -190,14 +189,17 @@ def updateCreds(email, newtoken): #Could have an error #TODO: Test
         print("Error updating token to PostgresSQL database", error)
 
 
-
+""" 
+Checks if the User already has existing credentials 
+If false create new 
+"""
 def existCreds(email): #
     try:
         conn = get_db()
         cursor = conn.cursor()
         cursor.execute("SELECT count(*) FROM creds WHERE email=%s ", [email]) 
-        count=cursor.fetchone()
-        if(count[0] == 1):
+        count=cursor.fetchone()[0]
+        if(count == 1):
             return True
         return False
     

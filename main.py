@@ -2,7 +2,7 @@
 from flask import Flask, render_template
 import psycopg2
 import psycopg2.extras
-from flask import Flask, request, render_template, g, flash, session, redirect, url_for
+from flask import Flask, request, render_template, g, flash, session, redirect, url_for, send_from_directory
 from flask.cli import with_appcontext
 import os
 from src import CalHandle
@@ -10,11 +10,11 @@ from src import DBhandle
 from werkzeug.utils import secure_filename
 import json
 import os
-
+from src import keywordfinder
 
 app = Flask(__name__)
 app.secret_key = "SyllyCalendar2023"
-UPLOAD_FOLDER ='/uploads' #path for uploaded folders
+UPLOAD_FOLDER ='uploads' #path for uploaded folders
 ALLOWED_EXTENSIONS = {'pdf','txt'}  #allowed extensions -> can be added to 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ####################################################
@@ -64,13 +64,13 @@ def signup():
 def uploadevents():
     if "step" not in request.form:
         #TODO: Change data to match the information from PDF-> Next line is only for test 
-        data =  CalHandle.getEvents("toc8bngrdtnj2rrlfnhcb3v7l4@group.calendar.google.com",session["email"])
-        return render_template("uploadevents.html", data = json.dumps(data))
+        return render_template("uploadevents.html")
     
     #After sumbit will create the Events 
     elif request.form["step"] == "create":
         num = int(request.form["numelements"])
-        print(num)
+        calname = request.form["calname"]
+        CalHandle.createCalendar(session["email"], calname)
         for y in range(1, num+1):
             x = str(y)
             title = request.form["event-title"+x]
@@ -79,34 +79,39 @@ def uploadevents():
             enddate = request.form["end-date"+x]
             endtime = request.form["end-time"+x]
             des = request.form["description"+x]
-            print(title + " "+startdate + " "+starttime + " "+enddate + " "+endtime + " "+des+"\n")
+            start = CalHandle.formateTimeStap(startdate,starttime)
+            end = CalHandle.formateTimeStap(enddate, endtime)
+            CalHandle.createEvent(session["email"], calname, title, start, end, des);
         return 'executed'; #TODO: return a template that informs the user of creation
 
-#TODO: CODE below is used for file upload 
+
 #Makes sure the file being submited is a correct TYPE
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #Allows for the upload of a document to the server
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/uploadfile', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
-            return redirect(request.url)
+            return render_template("uploadform.html", empty="none", tag="block")
         file = request.files['file']
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
         if file.filename == '':
             flash('No selected file')
-            return redirect(request.url)
+            return render_template("uploadform.html", empty="block", tag="none")
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('download_file', name=filename))
-    return 'hello'
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            data = keywordfinder.generateevents(filename);
+            calname= request.form["class-title"];
+            return render_template("uploadevents.html", data = json.dumps(data), name = calname)
+    return render_template("uploadform.html", empty="none", tag="none")
 
 
 @app.teardown_appcontext

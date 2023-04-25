@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Upload Class Form</title>
+	<link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+	<link rel = "icon" type = "image/png" href = "{{ url_for('static',filename='favicon.png') }}">
+        <!-- For apple devices -->
+    <link rel = "apple-touch-icon" type = "image/png" href = "{{ url_for('static',filename='favicon.png') }}"/>
+</head>
+<body>
+	<div class="document-container">
+		<div class="document-box">
+        		<iframe src="/static/Example1.pdf" width="100%" height="400px"></iframe>
+        		<div class="document-description">This pdf is ideal because it has the date and assigment on one line</div>
+    		</div>
+		<div class="document-box">
+        		<iframe src="/static/Example2.pdf" width="100%" height="400px"></iframe>
+        		<div class="document-description">This pdf is ideal because it has the date clearly seperated and assigment under it</div>
+    		</div>
+		<div class="document-box">
+        		<iframe src="/static/Example3.pdf" width="100%" height="400px"></iframe>
+        		<div class="document-description">This pdf is ideal because it has the date and assigment on one line</div>
+    		</div>
+	</div>
+	<text>
+	     <center>
+	    Disclaimer: Check all assigments and confirm the dates are correct after uploading your documentation. 
+	    There is a potentional for errors and if any are found, can be corrected by editing the event.
+	     </center>
+	</text>
+		<form id="upload-form" class="upload" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+			<div class="passerror" style="display:{{ empty }}">
+                <p> No file chosen </p>
+            </div>
+			<div class="passerror" style="display:{{ tag }}">
+                <p> No file chosen </p>
+            </div>
+			<label for="class-title">Class Title:</label>
+			<input type="text" id="class-title" name="class-title">
+
+			<label for="syllabus-file">Syllabus PDF:</label>
+			<input type="file" name="file">
+			<input type="submit" value="Upload">
+		</form>
+</body>
+</html>

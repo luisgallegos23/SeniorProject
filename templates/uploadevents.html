@@ -8,33 +8,33 @@
         <link rel = "apple-touch-icon" type = "image/png" href = "{{ url_for('static',filename='favicon.png') }}"/>
         <script> 
             var val = 0;
-
             /* Creates the individual forms of each event based on the data extraction from PDF for use.*/
             function buildForm(){
                 var e = document.getElementById('data').value;
                 var data = JSON.parse(e);
+                var calname = document.getElementById('calname').value
                 data.forEach(event => {
                     val++;
                     var element = (
                         `<div id="div${val}">
                             <p class="eventheader"> Event: ${val}</p>
                             <label for="event-title">Event Title:</label>
-                            <input type="text" class="ininfo" name="event-title${val}" value="${event.summary}">
+                            <input type="text" class="ininfo" name="event-title${val}" value="${calname}">
 
                             <label for="start-date">Start Date:</label>
-                            <input type="date" class="ininfo" name="start-date${val}" value="${event.start.date}">
+                            <input type="date" class="ininfo" name="start-date${val}" value="${event[0]}">
 
                             <label for="start-time">Start Time:</label>
                             <input type="time" class="ininfo" name="start-time${val}" value="12:00">
 
                             <label for="end-date">End Date:</label>
-                            <input type="date" class="ininfo" name="end-date${val}" value="${event.end.date}">
+                            <input type="date" class="ininfo" name="end-date${val}" value="${event[0]}">
 
                             <label for="end-time">End Time:</label>
                             <input type="time" class="ininfo" name="end-time${val}" value="12:00">
 
                             <label for="description">Notes/Description:</label>
-                            <textarea name="description${val}" value=""></textarea>
+                            <textarea name="description${val}">${event[1]}</textarea>
                             <hr class="sep">
                         </div>`
                     );
@@ -94,6 +94,7 @@
     <h1 id="title_name">SYLLY CALENDAR</h1>
     <form id = "config" class="form" action="{{ url_for('uploadevents') }}" method="post">
         <input id="data" type="hidden" name="data" value="{{data}}">
+        <input id="calname" type="hidden" name="calname" value="{{name}}">
         <input type="hidden" id="numelements" name="numelements" value="">
         <div id='container'>
             <script>buildForm()</script>
