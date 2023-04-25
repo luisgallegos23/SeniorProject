@@ -91,8 +91,9 @@
         </script>
     </head>
 <body>
-    <h1 id="title_name">SYLLY CALENDAR</h1>
+    
     <form id = "config" class="form" action="{{ url_for('uploadevents') }}" method="post">
+        <h1 id="title_name">SYLLY CALENDAR</h1>
         <input id="data" type="hidden" name="data" value="{{data}}">
         <input id="calname" type="hidden" name="calname" value="{{name}}">
         <input type="hidden" id="numelements" name="numelements" value="">
