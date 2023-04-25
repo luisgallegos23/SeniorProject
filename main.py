@@ -33,7 +33,7 @@ def signin():
             email = request.form["email"]
             session["email"] = email
             #TODO: when return the template add other paramater for data to create calendar
-            return render_template("home.html")
+            return render_template("CalendarSplit.html")
         
         else:
              return render_template("signin.html", step = "signin", visibility="block" )
