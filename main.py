@@ -81,7 +81,7 @@ def uploadevents():
             start = CalHandle.formateTimeStap(startdate,starttime)
             end = CalHandle.formateTimeStap(enddate, endtime)
             CalHandle.createEvent(session["email"], calname, title, start, end, des);
-        return 'executed'; #TODO: return a template that informs the user of creation
+        return render_template("CalendarSplit.html"); #TODO: return a template that informs the user of creation
 
 
 #Makes sure the file being submited is a correct TYPE
