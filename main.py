@@ -2,8 +2,7 @@
 from flask import Flask, render_template
 import psycopg2
 import psycopg2.extras
-from flask import Flask, request, render_template, g, flash, session, redirect, url_for, send_from_directory
-from flask.cli import with_appcontext
+from flask import Flask, request, render_template, g, flash, session
 import os
 from src import CalHandle
 from src import DBhandle
