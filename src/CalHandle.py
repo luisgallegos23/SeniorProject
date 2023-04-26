@@ -135,7 +135,7 @@ def getEvents(calendarID, email):#
 
     
 def formateTimeStap(date, time):
-    time=date+"T"+time+":00-07:00" #Format can be changed to meet time stamps
+    time=date+"T"+time+":00Z" #Format can be changed to meet time stamps
     return time
 
 def removeEvent(email,eventid, calendar): #TODO: Test 

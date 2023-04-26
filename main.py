@@ -2,8 +2,7 @@
 from flask import Flask, render_template
 import psycopg2
 import psycopg2.extras
-from flask import Flask, request, render_template, g, flash, session, redirect, url_for, send_from_directory
-from flask.cli import with_appcontext
+from flask import Flask, request, render_template, g, flash, session
 import os
 from src import CalHandle
 from src import DBhandle
@@ -82,7 +81,7 @@ def uploadevents():
             start = CalHandle.formateTimeStap(startdate,starttime)
             end = CalHandle.formateTimeStap(enddate, endtime)
             CalHandle.createEvent(session["email"], calname, title, start, end, des);
-        return 'executed'; #TODO: return a template that informs the user of creation
+        return render_template("CalendarSplit.html"); #TODO: return a template that informs the user of creation
 
 
 #Makes sure the file being submited is a correct TYPE
